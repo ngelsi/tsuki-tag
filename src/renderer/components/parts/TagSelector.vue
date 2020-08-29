@@ -9,7 +9,7 @@
     hide-details
     clearable
     auto-select-first
-    label="Search tags"
+    :label="tt('search.tags')"
     solo
     dark
     full-width
@@ -21,6 +21,7 @@
 
 <script>
 import ProviderFilter from "../../model/ProviderFilter";
+import { t } from "../../services/Localizer";
 
 export default {
   name: "tag-selector",
@@ -57,6 +58,9 @@ export default {
     removeTag(tag) {
       this.tags = this.tags.filter((t) => t !== tag);
     },
+    tt(val) {
+      return t(val);
+    },
   },
   watch: {
     search(val) {
@@ -64,7 +68,6 @@ export default {
     },
     tags(val) {
       this.search = null;
-      console.log("tagschanged");
       this.$emit("tagschanged", this.tags);
     },
   },

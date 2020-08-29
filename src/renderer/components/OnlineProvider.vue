@@ -3,9 +3,11 @@
     <v-toolbar dark class="rounded-0 provider-toolbar">
       <ProviderNavigation></ProviderNavigation>
       <TagSelector ref="tagSelector" v-on:tagschanged="tagsChanged"></TagSelector>
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
+      <ProviderSettings
+        v-on:providersChanged="providersChanged"
+        :providers="availableProviders"
+        :selectedProviders="availableProviders"
+      ></ProviderSettings>
     </v-toolbar>
     <PictureCollection :pictures="pictures"></PictureCollection>
     <Toaster ref="toaster"></Toaster>
@@ -16,6 +18,7 @@
 import ProviderNavigation from "./navigation/ProviderNavigation";
 import TagSelector from "./parts/TagSelector";
 import Toaster from "./parts/Toaster";
+import ProviderSettings from "./parts/ProviderSettings";
 import PictureCollection from "./parts/PictureCollection";
 import ProviderFilter from "../model/ProviderFilter";
 import Picture from "../model/picture/Picture";
@@ -31,8 +34,6 @@ export default {
     loading: false,
     /** @type {ProviderFilter} */
     filter: new ProviderFilter(),
-    /** @type {Array<string>} */
-    providers: ["safebooru", "konachan"],
     /** @type {Array<Picture>} */
     pictures: [],
     /** @type {Boolean} */
@@ -45,13 +46,13 @@ export default {
     TagSelector,
     PictureCollection,
     Toaster,
+    ProviderSettings,
   },
   methods: {
     /**
-     * @param {Array<string>} event
+     *  @param {Boolean} load
      */
-    tagsChanged(event) {
-      this.filter.tags = event;
+    resetState(load) {
       this.filter.page = 0;
       this.pictures = [];
       this.currentSearchFinished = false;
@@ -59,7 +60,24 @@ export default {
       let container = window;
       container.scrollTo(0, 0);
 
-      this.getPictures();
+      if (load) {
+        this.getPictures();
+      }
+    },
+
+    /**
+     * @param {Array<string>} event
+     */
+    tagsChanged(event) {
+      this.filter.tags = event;
+      this.resetState(true);
+    },
+    /**
+     * @param {Array<string>} event
+     */
+    providersChanged(event) {
+      this.filter.providers = event;
+      this.resetState(true);
     },
     getPictures() {
       if (this.loading || this.currentSearchFinished) {
@@ -67,7 +85,6 @@ export default {
       }
 
       this.loading = true;
-      this.filter.providers = this.providers;
 
       if (this.nextBatch) {
         this.filter.page += 1;
@@ -80,6 +97,7 @@ export default {
           if (!data || data.length === 0) {
             this.currentSearchFinished = true;
           } else {
+            data = data.sort((p1, p2) => p1.md5.localeCompare(p2.md5));
             data.forEach((picture) => {
               const existing = this.pictures.filter(
                 (p) => p.md5 === picture.md5
@@ -126,7 +144,7 @@ export default {
     },
   },
   created() {
-    this.providers = providerService.providerNames;
+    this.filter.providers = providerService.providerNames;
     this.getPictures();
   },
   mounted() {

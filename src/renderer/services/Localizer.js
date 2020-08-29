@@ -1,5 +1,13 @@
 const en = {
-    "search.empty": "No more results."
+
+    "misc.close": "Close",
+
+    "search.providers": "Providers",
+    "search.empty": "No more results.",
+    "search.tags": "Search tags",
+
+    "safebooru": "Safebooru",
+    "konachan": "Konachan"
 };
 
 const options = {
@@ -11,7 +19,7 @@ const languages = {
 };
 
 const t = function (key, language) {
-    return languages[language || options.selectedLanguage][key];
+    return languages[language || options.selectedLanguage][key] || key;
 };
 
-export { t, options }
+export { t, options };

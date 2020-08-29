@@ -3,7 +3,14 @@
     <div v-for="picture in pictures" :key="picture.md5" class="ma-5 float-left picture-container">
       <v-tooltip absolute fixed bottom>
         <template v-slot:activator="{ on, attrs }">
-          <img :src="picture.previewUrl" v-bind="attrs" v-on="on" class="picture" />
+          <img
+            :src="picture.previewUrl"
+            v-bind="attrs"
+            v-on="on"
+            class="picture"
+            :width="picture.width"
+            :height="picture.height"
+          />
         </template>
         <span>{{picture.tagString}}</span>
       </v-tooltip>
