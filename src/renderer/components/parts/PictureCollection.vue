@@ -8,8 +8,9 @@
             v-bind="attrs"
             v-on="on"
             class="picture"
-            :width="picture.width"
-            :height="picture.height"
+            :width="picture.previewWidth"
+            :height="picture.previewHeight"
+            @click="pictureSelected(picture)"
           />
         </template>
         <span>{{picture.tagString}}</span>
@@ -22,21 +23,25 @@
 import Picture from "../../model/picture/Picture";
 
 export default {
-  name: "online-provider",
+  name: "picture-collection",
   data: () => ({}),
   props: {
     /** @type {Array<Picture>} */
     pictures: Array,
   },
   components: {},
-  methods: {},
+  methods: {
+    /** @param {Picture} picture */
+    pictureSelected(picture) {
+      this.$emit("pictureSelected", picture);
+    },
+  },
   watch: {},
 };
 </script>
 
 <style>
 .pictures {
-  padding-top: 75px !important;
 }
 
 .picture-container {

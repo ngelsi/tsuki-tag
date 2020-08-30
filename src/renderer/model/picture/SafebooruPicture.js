@@ -4,6 +4,8 @@ export default class SafebooruPicture extends Picture {
 
     constructor() {
         super();
+
+        this._provider = "safebooru";
     }
 
     /**
@@ -24,11 +26,11 @@ export default class SafebooruPicture extends Picture {
         this._source = obj.source;
         this._status = obj.status;
         this._createdBy = obj.creator_id;
-        this._previewHeight = obj.preview_height;
-        this._previewWidth = obj.preview_width;
+        this._previewHeight = parseInt(obj.preview_height);
+        this._previewWidth = parseInt(obj.preview_width);
         this._previewUrl = obj.preview_url;
-        this._width = obj.width;
-        this._height = obj.height;
+        this._width = parseInt(obj.width);
+        this._height = parseInt(obj.height);
         this._url = obj.file_url;
     }
 }

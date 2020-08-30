@@ -14,6 +14,13 @@ export default class Picture {
          * @protected
          * @type {String}
          */
+        this._provider = null;
+
+        /**
+         * @member
+         * @protected
+         * @type {String}
+         */
         this._parentId = null;
 
         /**
@@ -131,20 +138,85 @@ export default class Picture {
         return this._tags.trim().split(' ');
     }
 
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
     get url() {
         return this._url;
     }
 
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
     get previewUrl() {
         return this._previewUrl;
     }
 
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
     get md5() {
         return this._md5;
     }
 
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
     get tagString() {
         return this._tags;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
+    get provider() {
+        return this._provider;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {Number}
+     */
+    get width() {
+        return this._width;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {Number}
+     */
+    get height() {
+        return this._height;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {Number}
+     */
+    get previewWidth() {
+        return this._previewWidth;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {Number}
+     */
+    get previewHeight() {
+        return this._previewHeight;
     }
 
     /**
@@ -154,5 +226,5 @@ export default class Picture {
      * @param {Object} obj the object containing properties to be assigned to this instance.
      * @returns {void}
      */
-    fromData(obj) {}
+    fromData(obj) { }
 }

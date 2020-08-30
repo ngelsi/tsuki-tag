@@ -63,7 +63,7 @@ export class OnlinePictureProviderService extends PictureProviderService {
          */
         this._providers = [
             new SafebooruProvider(),
-            new KonachanProvider()
+            // new KonachanProvider()
         ];
     }
 

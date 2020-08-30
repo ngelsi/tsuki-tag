@@ -7,7 +7,9 @@ const en = {
     "search.tags": "Search tags",
 
     "safebooru": "Safebooru",
-    "konachan": "Konachan"
+    "konachan": "Konachan",
+
+    "picture.tags": "Tags",
 };
 
 const options = {

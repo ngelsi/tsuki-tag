@@ -4,6 +4,8 @@ export default class KonachanPicture extends Picture {
 
     constructor() {
         super();
+
+        this._provider = "konachan";
     }
 
     /**

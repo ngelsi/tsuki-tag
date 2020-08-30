@@ -1,6 +1,7 @@
 <template>
   <v-autocomplete
     v-model="tags"
+    :value="tags"
     :loading="loading"
     :items="items"
     :search-input.sync="search"
@@ -54,9 +55,15 @@ export default {
     },
     addTag(tag) {
       this.tags.push(tag);
+      this.items.push(tag);
     },
     removeTag(tag) {
       this.tags = this.tags.filter((t) => t !== tag);
+    },
+    uniqueTag(tag) {
+      this.tags = [];
+      this.tags.push(tag);
+      this.items.push(tag);
     },
     tt(val) {
       return t(val);

@@ -9,8 +9,18 @@
         :selectedProviders="availableProviders"
       ></ProviderSettings>
     </v-toolbar>
-    <PictureCollection :pictures="pictures"></PictureCollection>
+    <v-container fluid class="provider-container">
+      <v-row>
+        <v-col cols="2" class="provider-container-tags">
+          <PictureTags :pictures="pictures" :limit="40" v-on:tagSelected="tagSelected"></PictureTags>
+        </v-col>
+        <v-col class="provider-container-pictures">
+          <PictureCollection :pictures="pictures" v-on:pictureSelected="pictureSelected"></PictureCollection>
+        </v-col>
+      </v-row>
+    </v-container>
     <Toaster ref="toaster"></Toaster>
+    <PictureModal ref="pictureModal"></PictureModal>
   </v-card>
 </template>
 
@@ -20,6 +30,8 @@ import TagSelector from "./parts/TagSelector";
 import Toaster from "./parts/Toaster";
 import ProviderSettings from "./parts/ProviderSettings";
 import PictureCollection from "./parts/PictureCollection";
+import PictureModal from "./modals/PictureModal";
+import PictureTags from "./parts/PictureTags";
 import ProviderFilter from "../model/ProviderFilter";
 import Picture from "../model/picture/Picture";
 import { t } from "../services/Localizer";
@@ -40,6 +52,8 @@ export default {
     nextBatch: false,
     /** @type {Boolean} */
     currentSearchFinished: false,
+    /** @type {Picture} */
+    currentPicture: null,
   }),
   components: {
     ProviderNavigation,
@@ -47,6 +61,8 @@ export default {
     PictureCollection,
     Toaster,
     ProviderSettings,
+    PictureModal,
+    PictureTags,
   },
   methods: {
     /**
@@ -62,6 +78,35 @@ export default {
 
       if (load) {
         this.getPictures();
+      }
+    },
+
+    /**
+     * @param {Picture} event
+     */
+    pictureSelected(event) {
+      // this.currentPicture = event;
+      // this.$refs.pictureModal.show(this.currentPicture);
+    },
+
+    /**
+     * @param {Object} event
+     */
+    tagSelected(event) {
+      if (event.action === "add") {
+        const existingTag = this.filter.tags.filter((t) => t == event.tag);
+        if (existingTag && existingTag.length) {
+          return;
+        } else {
+          this.$refs.tagSelector.addTag(event.tag);
+        }
+      } else if (event.action === "remove") {
+        const existingTag = this.filter.tags.filter((t) => t == event.tag);
+        if (existingTag && existingTag.length) {
+          this.$refs.tagSelector.removeTag(event.tag);
+        }
+      } else if (event.action === "unique") {
+        this.$refs.tagSelector.uniqueTag(event.tag);
       }
     },
 
@@ -174,5 +219,13 @@ export default {
 .provider-card .provider-toolbar {
   position: fixed;
   width: 100%;
+}
+
+.provider-container {
+  padding-top: 75px !important;
+}
+
+.provider-container-tags {
+  min-width: 250px;
 }
 </style>
