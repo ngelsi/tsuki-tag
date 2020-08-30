@@ -13,10 +13,21 @@
       </v-toolbar>
       <v-container fluid>
         <v-row>
-          <v-col cols="3" class="metadata-col">
-            <div class="metadata-container" v-bind:style="{'max-height': containerHeight + 'px'}"></div>
+          <v-col cols="2" class="metadata-col">
+            <div
+              class="metadata-container"
+              v-if="picture && picture.md5"
+              v-bind:style="{'max-height': containerHeight + 'px'}"
+            >
+              <PictureTags
+                :pictures="pictures"
+                :showCount="false"
+                :height="tagHeight"
+                v-on:tagSelected="tagSelected"
+              ></PictureTags>
+            </div>
           </v-col>
-          <v-col cols="9" align-self="center" class="picturemodal-col">
+          <v-col align-self="center" class="picturemodal-col">
             <v-row>
               <v-col cols="12" align-self="center" class="pr-6">
                 <div
@@ -24,7 +35,7 @@
                   v-bind:style="{'max-height': containerHeight + 'px', 'max-width': containerWidth + 'px'}"
                 >
                   <img
-                    v-if="picture"
+                    v-if="picture && picture.md5"
                     class="picture"
                     :src="picture.url"
                     :height="imageHeight"
@@ -42,6 +53,7 @@
 
 <script>
 import Picture from "../../model/picture/Picture";
+import PictureTags from "../parts/PictureTags";
 
 export default {
   data() {
@@ -50,6 +62,8 @@ export default {
       showing: false,
       /** @type {Picture} */
       picture: {},
+      /** @type {Array<Picture>}] */
+      pictures: [],
       /** @type {Number} */
       containerWidth: 0,
       /** @type {Number} */
@@ -59,14 +73,27 @@ export default {
       /** @type {Number} */
       imageHeight: 0,
       /** @type {Number} */
+      tagHeight: 0,
+      /** @type {Number} */
       currentRatio: 0,
     };
   },
+  components: { PictureTags },
   computed: {},
   methods: {
+    /** @param {Object} event */
+    tagSelected(event) {
+      this.$emit("tagSelected", event);
+      this.close();
+    },
+
     /** @param {Picture} picture */
     show(picture) {
+      const newPictures = [picture];
+
       this.picture = picture;
+      this.pictures = newPictures;
+
       this.calculateDimensions();
 
       this.showing = true;
@@ -74,6 +101,7 @@ export default {
     close() {
       this.showing = false;
       this.picture = null;
+      this.pictures = [];
     },
     calculateDimensions() {
       if (this.picture && this.picture.md5) {
@@ -92,6 +120,7 @@ export default {
         this.containerHeight = maxHeight;
         this.imageWidth = scaledWidth;
         this.imageHeight = scaledHeight;
+        this.tagHeight = maxHeight / 2;
 
         console.log(scaledWidth, scaledHeight);
       }
@@ -125,6 +154,7 @@ export default {
 }
 
 .metadata-col {
+  min-width: 250px;
 }
 
 .metadata-col .metadata-container {

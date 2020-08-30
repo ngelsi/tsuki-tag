@@ -12,7 +12,12 @@
     <v-container fluid class="provider-container">
       <v-row>
         <v-col cols="2" class="provider-container-tags">
-          <PictureTags :pictures="pictures" :limit="40" v-on:tagSelected="tagSelected"></PictureTags>
+          <PictureTags
+            :pictures="pictures"
+            :limit="40"
+            :showCount="true"
+            v-on:tagSelected="tagSelected"
+          ></PictureTags>
         </v-col>
         <v-col class="provider-container-pictures">
           <PictureCollection :pictures="pictures" v-on:pictureSelected="pictureSelected"></PictureCollection>
@@ -20,7 +25,7 @@
       </v-row>
     </v-container>
     <Toaster ref="toaster"></Toaster>
-    <PictureModal ref="pictureModal"></PictureModal>
+    <PictureModal ref="pictureModal" v-on:tagSelected="tagSelected"></PictureModal>
   </v-card>
 </template>
 
@@ -85,8 +90,8 @@ export default {
      * @param {Picture} event
      */
     pictureSelected(event) {
-      // this.currentPicture = event;
-      // this.$refs.pictureModal.show(this.currentPicture);
+      this.currentPicture = event;
+      this.$refs.pictureModal.show(this.currentPicture);
     },
 
     /**

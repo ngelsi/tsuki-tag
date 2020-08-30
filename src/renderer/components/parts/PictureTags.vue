@@ -6,20 +6,26 @@
         &nbsp;
         {{limit}}/{{tagCount}}
       </span>
+      <span v-else>
+        &nbsp;
+        {{tagCount}}
+      </span>
     </v-subheader>
-    <v-list-item v-for="tag in tags" :key="tag.name" class="tag-container pl-2">
-      <v-list-item-content class="tag-content pa-0">
-        <div>
-          <a class="purple--text text-decoration-none" @click="tagSelected(tag.name, 'add')">+</a>
-          <a class="purple--text text-decoration-none" @click="tagSelected(tag.name, 'remove')">-</a>
-          <a
-            class="purple--text text-decoration-none"
-            @click="tagSelected(tag.name, 'unique')"
-          >{{prettifyTag(tag.name)}}</a>
-          <span class="tag-content-count">{{tag.count}}</span>
-        </div>
-      </v-list-item-content>
-    </v-list-item>
+    <div class="tag-wrapper" v-bind:style="{'height': getHeight()}">
+      <v-list-item v-for="tag in tags" :key="tag.name" class="tag-container pl-2">
+        <v-list-item-content class="tag-content pa-0">
+          <div>
+            <a class="purple--text text-decoration-none" @click="tagSelected(tag.name, 'add')">+</a>
+            <a class="purple--text text-decoration-none" @click="tagSelected(tag.name, 'remove')">-</a>
+            <a
+              class="purple--text text-decoration-none"
+              @click="tagSelected(tag.name, 'unique')"
+            >{{prettifyTag(tag.name)}}</a>
+            <span class="tag-content-count" v-if="showCount">{{tag.count}}</span>
+          </div>
+        </v-list-item-content>
+      </v-list-item>
+    </div>
   </v-list>
 </template>
 
@@ -40,6 +46,10 @@ export default {
     pictures: Array,
     /** @type {Number} */
     limit: Number,
+    /** @type {Boolean} */
+    showCount: Boolean,
+    /** @type {Number} */
+    height: Number,
   },
   components: {},
   methods: {
@@ -52,6 +62,13 @@ export default {
       if (tag) {
         return tag.replace("_", " ");
       }
+    },
+    getHeight() {
+      if (this.height) {
+        return this.height + "px";
+      }
+
+      return "auto";
     },
     calculateTags() {
       let newTags = [];
@@ -83,6 +100,7 @@ export default {
 
       newTags = newTags.sort((t1, t2) => t1.name.localeCompare(t2.name));
 
+      console.log("newtags", newTags);
       this.tags = newTags;
     },
     tagSelected(tag, action) {
@@ -91,6 +109,9 @@ export default {
         action: action,
       });
     },
+  },
+  created() {
+    this.calculateTags();
   },
   watch: {
     pictures(val) {
@@ -101,6 +122,11 @@ export default {
 </script>
 
 <style>
+.picture-tags .tag-wrapper {
+  overflow-y: auto;
+  width: 245px;
+}
+
 .picture-tags {
   position: fixed;
 }
@@ -111,6 +137,10 @@ export default {
 
 .picture-tags .tag-content {
   font-size: 13px;
+}
+
+.picture-tags .tag-content a:hover {
+  color: white !important;
 }
 
 .picture-tags .tag-content .tag-content-count {
