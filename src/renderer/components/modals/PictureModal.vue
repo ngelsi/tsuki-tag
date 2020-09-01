@@ -49,7 +49,7 @@
                   <img
                     v-if="picture && picture.md5"
                     class="picture"
-                    :src="picture.url"
+                    :src="imageData"
                     :height="imageHeight"
                     :width="imageWidth"
                   />
@@ -67,6 +67,8 @@
 import Picture from "../../model/picture/Picture";
 import PictureTags from "../parts/PictureTags";
 import PictureMetadata from "../parts/PictureMetadata";
+import PictureWorker from "../../services/PictureWorker";
+import { remote } from "electron";
 
 export default {
   data() {
@@ -93,6 +95,8 @@ export default {
       metadataOffset: 0,
       /** @type {Number} */
       currentRatio: 0,
+      /** @type {String} */
+      imageData: null,
     };
   },
   components: { PictureTags, PictureMetadata },
@@ -106,6 +110,8 @@ export default {
 
     /** @param {Picture} picture */
     show(picture) {
+      this.downloadPictureData(picture);
+
       const newPictures = [picture];
 
       this.picture = picture;
@@ -114,12 +120,11 @@ export default {
       this.calculateDimensions();
 
       this.showing = true;
-      console.log(this.picture.url);
-      console.log(this.picture);
     },
     close() {
       this.showing = false;
       this.picture = null;
+      this.imageData = null;
       this.pictures = [];
     },
     calculateDimensions() {
@@ -143,14 +148,18 @@ export default {
         this.tagHeight = maxHeight - metadataHeight;
         this.metadataHeight = metadataHeight;
         this.metadataOffset = this.tagHeight + metadataHeight + 15;
-
-        console.log(scaledWidth, scaledHeight);
       }
     },
     subscribeToResize() {
       window.onresize = (event) => {
         this.calculateDimensions();
       };
+    },
+    downloadPictureData(picture) {
+      const worker = new PictureWorker();
+      worker.downloadPicture(picture.url).then((buffer) => {
+        this.imageData = worker.convertToSrc(picture.extension, buffer);
+      });
     },
   },
   created() {

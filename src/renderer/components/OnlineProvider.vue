@@ -147,7 +147,6 @@ export default {
           if (!data || data.length === 0) {
             this.currentSearchFinished = true;
           } else {
-            console.log("DATA", data);
             data = data.sort((p1, p2) => p1.md5.localeCompare(p2.md5));
             data.forEach((picture) => {
               const existing = this.pictures.filter(
@@ -210,7 +209,6 @@ export default {
     currentSearchFinished(val) {
       if (val) {
         this.$refs.toaster.info(t("search.empty"));
-        console.log("current search finished");
       }
     },
   },

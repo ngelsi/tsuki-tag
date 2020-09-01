@@ -10,6 +10,8 @@ const en = {
     "konachan": "Konachan",
     "danbooru": "Danbooru",
 
+    "danbooru.taglimit": "Danbooru has a limit of 2 tags per search.",
+
     "picture.tags": "Tags",
     "picture.metadatas": "Metadata",
     "picture.id": "ID",
