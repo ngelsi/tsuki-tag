@@ -29,8 +29,9 @@ export default class KonachanPicture extends Picture {
         this._previewHeight = obj.preview_height;
         this._previewWidth = obj.preview_width;
         this._previewUrl = obj.preview_url;
-        this._width = obj.width;
-        this._height = obj.height;
-        this._url = obj.file_url;
+        this._width = obj.sample_width;
+        this._height = obj.sample_height;
+        this._url = obj.sample_url;
+        this._downloadUrl = obj.file_url;
     }
 }

@@ -34,7 +34,7 @@ export class KonachanProvider extends OnlinePictureProvider {
          * @override
          * @type {String}
          */
-        this._baseUrl = 'https://konachan.net/post.json';
+        this._baseUrl = 'https://konachan.com/post.json';
 
         /**
          * @member

@@ -112,6 +112,13 @@ export default class Picture {
          * @protected
          * @type {String}
          */
+        this._downloadUrl = null;
+
+        /**
+         * @member
+         * @protected
+         * @type {String}
+         */
         this._status = null;
 
         /**
@@ -145,6 +152,15 @@ export default class Picture {
      */
     get url() {
         return this._url;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
+    get downloadUrl() {
+        return this._downloadUrl;
     }
 
     /**

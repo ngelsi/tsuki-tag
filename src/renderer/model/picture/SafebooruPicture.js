@@ -32,5 +32,6 @@ export default class SafebooruPicture extends Picture {
         this._width = parseInt(obj.width);
         this._height = parseInt(obj.height);
         this._url = obj.file_url;
+        this._downloadUrl = obj.file_url;
     }
 }

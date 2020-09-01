@@ -114,6 +114,8 @@ export default {
       this.calculateDimensions();
 
       this.showing = true;
+      console.log(this.picture.url);
+      console.log(this.picture);
     },
     close() {
       this.showing = false;
