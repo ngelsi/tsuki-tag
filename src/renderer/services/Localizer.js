@@ -8,6 +8,7 @@ const en = {
 
     "safebooru": "Safebooru",
     "konachan": "Konachan",
+    "danbooru": "Danbooru",
 
     "picture.tags": "Tags",
     "picture.metadatas": "Metadata",

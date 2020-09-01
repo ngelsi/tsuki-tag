@@ -99,8 +99,6 @@ export default {
       }
 
       newTags = newTags.sort((t1, t2) => t1.name.localeCompare(t2.name));
-
-      console.log("newtags", newTags);
       this.tags = newTags;
     },
     tagSelected(tag, action) {

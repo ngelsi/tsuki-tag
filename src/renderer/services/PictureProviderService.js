@@ -5,6 +5,9 @@ import {
     KonachanProvider
 } from './pictureproviders/KonachanProvider';
 import {
+    DanbooruProvider
+} from './pictureproviders/DanbooruProvider';
+import {
     PictureProvider
 } from "./pictureproviders/PictureProvider";
 import {
@@ -63,7 +66,8 @@ export class OnlinePictureProviderService extends PictureProviderService {
          */
         this._providers = [
             new SafebooruProvider(),
-            new KonachanProvider()
+            new KonachanProvider(),
+            new DanbooruProvider()
         ];
     }
 
@@ -110,7 +114,7 @@ export class OnlinePictureProviderService extends PictureProviderService {
 
                     imageCollections.forEach( /** @type {Array<Picture>} */ images => {
                         images.forEach( /** @type {Picture} */ image => {
-                            if (image && image instanceof Picture) {
+                            if (image && image instanceof Picture && image.md5) {
                                 imageList.push(image);
                             }
                         });
