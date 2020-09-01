@@ -1,6 +1,8 @@
 const en = {
 
     "misc.close": "Close",
+    "misc.copy": "Copy",
+    "misc.copied": "Copied to clipboard.",
 
     "search.providers": "Providers",
     "search.empty": "No more results.",

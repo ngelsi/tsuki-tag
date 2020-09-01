@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar v-model="showing" :color="color" multi-line>
+  <v-snackbar v-model="showing" :color="color" multi-line top right>
     {{ text }}
     <template v-slot:action="{ attrs }">
       <v-btn icon dark text v-bind="attrs" @click="showing = false">
@@ -25,7 +25,7 @@ export default {
       this.showing = true;
     },
     info(text) {
-      this.showNotification(text, "info");
+      this.showNotification(text, "purple");
     },
     success(text) {
       this.showNotification(text, "success");

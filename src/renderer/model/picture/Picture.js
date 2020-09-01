@@ -294,6 +294,15 @@ export default class Picture {
      * @public
      * @type {String}
      */
+    get source() {
+        return this._source;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
     get extension() {
         const index = this._url.lastIndexOf('.');
         return this._url.substr(index + 1, this._url.length - index);

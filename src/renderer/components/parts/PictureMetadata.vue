@@ -1,28 +1,42 @@
 <template>
-  <v-list dense class="picture-metadatas" v-bind:style="{'top': getOffset()}">
-    <v-subheader>
-      <span>{{tt("picture.metadatas")}}</span>
-    </v-subheader>
-    <div class="metadata-wrapper" v-bind:style="{'height': getHeight()}">
-      <v-list-item
-        v-for="metadata in metadatas"
-        :key="metadata.name"
-        class="metadata-container pl-2"
-      >
-        <v-list-item-content class="metadata-content pa-0">
-          <div>
-            <span class="purple--text text-decoration-none">{{tt('picture.' + metadata)}}:</span>
-            <span class="text-decoration-none">{{prettifyMetadata(metadata, picture[metadata])}}</span>
-          </div>
-        </v-list-item-content>
-      </v-list-item>
-    </div>
-  </v-list>
+  <div>
+    <v-list dense class="picture-metadatas" v-bind:style="{'top': getOffset()}">
+      <v-subheader>
+        <span>{{tt("picture.metadatas")}}</span>
+      </v-subheader>
+      <div class="metadata-wrapper" v-bind:style="{'height': getHeight()}">
+        <v-list-item
+          v-for="metadata in metadatas"
+          :key="metadata.name"
+          class="metadata-container pl-2"
+        >
+          <v-list-item-content class="metadata-content pa-0">
+            <div>
+              <span class="purple--text text-decoration-none">{{tt('picture.' + metadata)}}:</span>
+              <span
+                class="text-decoration-none"
+                v-if="!isUrl(picture[metadata])"
+              >{{prettifyMetadata(metadata, picture[metadata])}}</span>
+              <span class="text-decoration-none" v-else>
+                <a
+                  class="purple--text text-decoration-none"
+                  @click="urlClicked(picture[metadata])"
+                >{{tt("misc.copy")}}</a>
+              </span>
+            </div>
+          </v-list-item-content>
+        </v-list-item>
+      </div>
+    </v-list>
+    <Toaster ref="toaster"></Toaster>
+  </div>
 </template>
 
 <script>
 import Picture from "../../model/picture/Picture";
 import { t } from "../../services/Localizer";
+import Toaster from "./Toaster";
+import { remote } from "electron";
 
 export default {
   name: "picture-metadata",
@@ -37,7 +51,9 @@ export default {
     /** @type {Array<String>} */
     metadatas: Array,
   },
-  components: {},
+  components: {
+    Toaster,
+  },
   methods: {
     /** @param {String} val */
     tt(val) {
@@ -55,6 +71,15 @@ export default {
     },
     prettifyMetadata(metadata, value) {
       return this.tt(value);
+    },
+    isUrl(value) {
+      return value.toString().startsWith("http");
+    },
+    urlClicked(url) {
+      const clipboard = remote.clipboard;
+      clipboard.writeText(url);
+
+      this.$refs.toaster.info(this.tt("misc.copied"));
     },
   },
   created() {},
