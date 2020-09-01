@@ -220,6 +220,70 @@ export default class Picture {
     }
 
     /**
+     * @property
+     * @public
+     * @type {String}
+     */
+    get dimensions() {
+        return `${this._width}x${this._height}`;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
+    get previewDimensions() {
+        return `${this._previewWidth}x${this._previewHeight}`;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
+    get id() {
+        return this._id;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
+    get createdAt() {
+        return new Date(this._createdAt).toLocaleString();
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {Number}
+     */
+    get score() {
+        return this._score;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
+    get rating() {
+        return this._rating;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
+    get extension() {
+        const index = this._url.lastIndexOf('.');
+        return this._url.substr(index + 1, this._url.length - index);
+    }
+
+    /**
      * Sets the fields of the picture from the provided object.
      * @method
      * @abstract

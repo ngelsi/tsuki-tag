@@ -10,6 +10,26 @@ const en = {
     "konachan": "Konachan",
 
     "picture.tags": "Tags",
+    "picture.metadatas": "Metadata",
+    "picture.id": "ID",
+    "picture.md5": "MD5",
+    "picture.dimensions": "Size",
+    "picture.height": "Height",
+    "picture.width": "Width",
+    "picture.provider": "Provider",
+    "picture.source": "Source",
+    "picture.score": "Score",
+    "picture.createdAt": "Created at",
+
+    "picture.rating": "Rating",
+    "s": "Safe",
+    "q": "Questionable",
+    "e": "Explicit",
+
+    "picture.extension": "Extension",
+    "jpg": "JPG",
+    "jpeg": "JPEG",
+    "png": "PNG",
 };
 
 const options = {

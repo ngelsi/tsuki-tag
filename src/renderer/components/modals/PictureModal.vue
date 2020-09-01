@@ -26,6 +26,18 @@
                 v-on:tagSelected="tagSelected"
               ></PictureTags>
             </div>
+            <div
+              class="metadata-container"
+              v-if="picture && picture.md5"
+              v-bind:style="{'max-height': containerHeight + 'px'}"
+            >
+              <PictureMetadata
+                :picture="picture"
+                :height="metadataHeight"
+                :offset="metadataOffset"
+                :metadatas="['provider', 'id', 'createdAt', 'dimensions', 'source', 'rating', 'score', 'extension']"
+              ></PictureMetadata>
+            </div>
           </v-col>
           <v-col align-self="center" class="picturemodal-col">
             <v-row>
@@ -54,6 +66,7 @@
 <script>
 import Picture from "../../model/picture/Picture";
 import PictureTags from "../parts/PictureTags";
+import PictureMetadata from "../parts/PictureMetadata";
 
 export default {
   data() {
@@ -75,10 +88,14 @@ export default {
       /** @type {Number} */
       tagHeight: 0,
       /** @type {Number} */
+      metadataHeight: 0,
+      /** @type {Number} */
+      metadataOffset: 0,
+      /** @type {Number} */
       currentRatio: 0,
     };
   },
-  components: { PictureTags },
+  components: { PictureTags, PictureMetadata },
   computed: {},
   methods: {
     /** @param {Object} event */
@@ -114,13 +131,16 @@ export default {
         const lowerRatio = heightRatio < widthRatio ? heightRatio : widthRatio;
         const scaledHeight = this.picture.height * lowerRatio;
         const scaledWidth = this.picture.width * lowerRatio;
+        const metadataHeight = 150;
 
         this.currentRatio = lowerRatio;
         this.containerWidth = maxWidth;
         this.containerHeight = maxHeight;
         this.imageWidth = scaledWidth;
         this.imageHeight = scaledHeight;
-        this.tagHeight = maxHeight / 2;
+        this.tagHeight = maxHeight - metadataHeight;
+        this.metadataHeight = metadataHeight;
+        this.metadataOffset = this.tagHeight + metadataHeight + 15;
 
         console.log(scaledWidth, scaledHeight);
       }
