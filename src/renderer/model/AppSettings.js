@@ -14,7 +14,8 @@ export default class AppSettings {
             onlineProviders: [
                 'safebooru',
                 'konachan',
-                'danbooru'
+                'danbooru',
+                'gelbooru'
             ],
             workspaces: [
 

@@ -11,6 +11,7 @@ const en = {
     "safebooru": "Safebooru",
     "konachan": "Konachan",
     "danbooru": "Danbooru",
+    "gelbooru": "Gelbooru",
 
     "danbooru.taglimit": "Danbooru has a limit of 2 tags per search.",
 

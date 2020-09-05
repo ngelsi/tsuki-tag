@@ -14,6 +14,7 @@ import {
     ProviderFilter
 } from "../model/ProviderFilter";
 import Picture from "../model/Picture/Picture";
+import { GelbooruProvider } from "./pictureproviders/GelbooruProvider";
 
 /**
  * @class
@@ -67,7 +68,8 @@ export class OnlinePictureProviderService extends PictureProviderService {
         this._providers = [
             new SafebooruProvider(),
             new KonachanProvider(),
-            new DanbooruProvider()
+            new DanbooruProvider(),
+            new GelbooruProvider()
         ];
     }
 
