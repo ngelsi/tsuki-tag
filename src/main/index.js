@@ -3,6 +3,10 @@ import {
   BrowserWindow
 } from 'electron'
 
+import path from 'path';
+
+const APP_NAME = "Tsuki-tag";
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -34,6 +38,11 @@ function createWindow() {
     mainWindow = null
   })
 }
+
+(function () {
+  app.setName(APP_NAME)
+  app.setPath('userData', path.join(app.getPath('appData'), APP_NAME));
+})();
 
 app.on('ready', createWindow)
 

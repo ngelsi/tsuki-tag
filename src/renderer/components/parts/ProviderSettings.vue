@@ -57,16 +57,24 @@ export default {
         this.providerSelections.filter((s) => s.selected).map((s) => s.name)
       );
     },
+    setupProviders() {
+      this.providerSelections = [];
+      this.providers.forEach((provider) => {
+        const selected = this.selectedProviders.filter((p) => p === provider);
+        this.providerSelections.push({
+          name: provider,
+          selected: selected && selected.length >= 1,
+        });
+      });
+    },
   },
   created() {
-    this.providerSelections = [];
-    this.providers.forEach((provider) => {
-      const selected = this.selectedProviders.filter((p) => p === provider);
-      this.providerSelections.push({
-        name: provider,
-        selected: selected && selected.length >= 1,
-      });
-    });
+    this.setupProviders();
+  },
+  watch: {
+    selectedProviders(val) {
+      this.setupProviders();
+    },
   },
 };
 </script>

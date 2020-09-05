@@ -6,7 +6,7 @@
       <ProviderSettings
         v-on:providersChanged="providersChanged"
         :providers="availableProviders"
-        :selectedProviders="availableProviders"
+        :selectedProviders="selectedProviders"
       ></ProviderSettings>
     </v-toolbar>
     <v-container fluid class="provider-container">
@@ -39,10 +39,13 @@ import PictureModal from "./modals/PictureModal";
 import PictureTags from "./parts/PictureTags";
 import ProviderFilter from "../model/ProviderFilter";
 import Picture from "../model/picture/Picture";
+import DataStore from "../services/DataStore";
+import AppSettings from "../model/AppSettings";
 import { t } from "../services/Localizer";
 import { OnlinePictureProviderService } from "../services/PictureProviderService";
 
 const providerService = new OnlinePictureProviderService();
+const dataStore = new DataStore();
 
 export default {
   name: "online-provider",
@@ -126,8 +129,23 @@ export default {
      * @param {Array<string>} event
      */
     providersChanged(event) {
-      this.filter.providers = event;
-      this.resetState(true);
+      dataStore
+        .get(AppSettings.name)
+        .then((/** @type {AppSettings} */ appsettings) => {
+          appsettings.onlineProviders = event;
+          dataStore
+            .set(AppSettings.name, appsettings)
+            .then(() => {
+              this.filter.providers = event;
+              this.resetState(true);
+            })
+            .catch((err) => {
+              console.log("ERR", err);
+            });
+        })
+        .catch((err) => {
+          console.log("ERR", err);
+        });
     },
     getPictures() {
       if (this.loading || this.currentSearchFinished) {
@@ -189,13 +207,25 @@ export default {
     availableProviders: () => {
       return providerService.providerNames;
     },
+    selectedProviders: function () {
+      return this.filter.providers;
+    },
     initialHeight: () => {
       return `${window.innerHeight * 1.1}px`;
     },
   },
   created() {
-    this.filter.providers = providerService.providerNames;
-    this.getPictures();
+    DataStore.defaults[AppSettings.name] = AppSettings.default;
+
+    dataStore
+      .get(AppSettings.name)
+      .then((/** @type {AppSettings} */ appsettings) => {
+        this.filter.providers = appsettings.onlineProviders;
+        this.getPictures();
+      })
+      .catch((err) => {
+        console.log("ERR", err);
+      });
   },
   mounted() {
     this.subscribeToScroll();
