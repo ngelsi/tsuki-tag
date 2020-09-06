@@ -47,6 +47,12 @@ const en = {
     "picture.score": "Score",
     "picture.createdAt": "Created at",
 
+    "op.savedefault": "Save to default workspace",
+    "op.saveselect": "Save to workspace...",
+    "op.nodefaultworkspace": "No default workspace has been configured yet.",
+    "op.picturesaved": "Saved to workspace '{0}' as '{1}'",
+    "op.picturesaveerror": "Could not save picture. Check writing rights and access to workspace {0}",
+
     "picture.rating": "Rating",
     "s": "Safe",
     "q": "Questionable",

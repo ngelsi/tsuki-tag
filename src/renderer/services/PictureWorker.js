@@ -2,6 +2,7 @@ import {
     remote
 } from 'electron';
 
+import fs from 'fs';
 import Picture from "../model/picture/Picture";
 
 export default class PictureWorker {
@@ -21,7 +22,7 @@ export default class PictureWorker {
                     response.on("end", () => {
                         resolve(buffer);
                     });
-                    response.on("data", (/** @type {Bugger} */ data) => {
+                    response.on("data", (/** @type {Buffer} */ data) => {
                         if (!buffer) {
                             buffer = data;
                         } else {
@@ -86,5 +87,37 @@ export default class PictureWorker {
 
         var base64 = window.btoa(binary);
         return base64;
+    }
+
+    /**     
+     * @param {String} path 
+     * @param {Buffer} buffer 
+     * @returns {Promise}
+     */
+    savePicture(path, buffer) {
+        return new Promise((resolve, reject) => {
+            fs.open(path, 'w', function (err, fd) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    fs.write(fd, buffer, 0, buffer.length, null, function (err) {
+                        if (err) {
+                            reject(err);
+                        }
+                        else {
+                            fs.close(fd, (err) => {
+                                if (err) {
+                                    reject(err);
+                                }
+                                else {
+                                    resolve();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
     }
 }
