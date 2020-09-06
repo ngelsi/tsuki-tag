@@ -1,17 +1,21 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [{
-      path: '/',
-      name: 'home',
-      component: require('@/components/Home').default
-    },
-    {
-      path: '*',
-      redirect: '/'
-    }
-  ]
-})
+    path: '/',
+    name: 'home',
+    component: require('@/components/Home').default
+  },
+  {
+    path: '/AppSettings',
+    name: 'appsettings',
+    component: require('@/components/AppSettings').default
+  },
+  {
+    path: '*',
+    redirect: '/'
+  }]
+});

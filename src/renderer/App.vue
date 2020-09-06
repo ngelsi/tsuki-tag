@@ -50,6 +50,8 @@ html {
 }
 
 .main-container {
+  height: 100%;
+  overflow: auto;
 }
 
 .op-bar-protecter {
