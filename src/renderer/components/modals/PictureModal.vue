@@ -249,12 +249,28 @@ export default {
         }
       }
 
-      const pictureName = `${this.picture.md5}.${this.picture.extension}`;
+      const pictureName = StringUtils.format(workspace.namingConvention, {
+        id: this.picture.id,
+        md5: this.picture.md5,
+        provider: this.picture.provider,
+        tagString: this.picture.tagString,
+        rating: this.picture.rating,
+        score: this.picture.score,
+        width: this.picture.width,
+        height: this.picture.height,
+        dimensions: this.picture.dimensions,
+        extension: this.picture.extension,
+      });
+
       const picturePath = path.join(workspace.path, pictureName);
       const worker = new PictureWorker();
 
       this.working = true;
       this.saving = true;
+
+      if (!workspace.downloadSourcePictures) {
+        this.sourceImageBuffer = this.imageBuffer;
+      }
 
       const error = () => {
         this.$refs.toaster.info(
@@ -287,7 +303,11 @@ export default {
           });
       } else {
         worker
-          .downloadPicture(this.picture.downloadUrl)
+          .downloadPicture(
+            workspace.downloadSourcePictures
+              ? this.picture.downloadUrl
+              : this.picture.url
+          )
           .then((buffer) => {
             this.sourceImageBuffer = buffer;
 

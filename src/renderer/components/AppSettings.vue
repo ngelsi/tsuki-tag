@@ -38,7 +38,7 @@
                   v-model="workspace.name"
                   required
                   :label="tt('settings.workspacename')"
-                  :rules="[rules.namerequired, checkWorkspaceName]"
+                  :rules="[rules.valuerequired, checkWorkspaceName]"
                   autofocus
                 ></v-text-field>
               </v-col>
@@ -50,24 +50,61 @@
                   :label="tt('settings.workspacepath')"
                 ></v-text-field>
               </v-col>
-              <v-col cols="3" class="pt-0 pr-5 pl-5 pb-0">
+              <v-col cols="12" md="4" class="pb-5 pl-5 pr-5">
+                <v-text-field
+                  v-model="workspace.namingConvention"
+                  required
+                  :label="tt('settings.workspacenamingconvention')"
+                  :rules="[rules.valuerequired]"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="8" class="pb-5 pl-5 pr-5">
+                <div
+                  class="text-subtitle-2 font-italic text--secondary"
+                >{{tt("settings.workspacenamingconventionhelp")}}</div>
+              </v-col>
+              <v-col cols="6" class="pt-0 pr-5 pl-5 pb-0">
                 <v-switch
                   v-model="workspace.default"
                   :label="tt('settings.defaultworkspace')"
                   @click="setDefaultWorkspace(workspace)"
                 ></v-switch>
               </v-col>
-              <v-col cols="3" class="pt-0 pr-5 pl-5 pb-0">
+              <v-col cols="6" class="pt-0 pr-5 pl-5 pb-0">
                 <v-switch
                   v-model="workspace.subdirectories"
                   :label="tt('settings.includesubdirectories')"
                 ></v-switch>
               </v-col>
               <v-col cols="6" class="pt-0 pr-5 pl-5 pb-0">
+                <v-switch
+                  v-model="workspace.downloadSourcePictures"
+                  :label="tt('settings.workspacesourcepictures')"
+                ></v-switch>
+              </v-col>
+              <v-col cols="6" class="pt-0 pr-5 pl-5 pb-0">
+                <v-switch
+                  v-model="workspace.convertToJpg"
+                  :label="tt('settings.workspaceconverttojpg')"
+                ></v-switch>
+              </v-col>
+              <v-col cols="6" class="pt-0 pr-5 pl-5 pb-0">
+                <v-switch
+                  v-model="workspace.includeMetadata"
+                  :label="tt('settings.workspaceincludemetadata')"
+                ></v-switch>
+              </v-col>
+              <v-col cols="6" class="pt-0 pr-5 pl-5 pb-0">
+                <v-switch
+                  v-model="workspace.includeTags"
+                  :label="tt('settings.workspaceincludetags')"
+                ></v-switch>
+              </v-col>
+              <v-col cols="6" class="pt-0 pb-0">
                 <v-btn
                   text
                   color="red"
-                  class="float-right mt-3 mb-3"
+                  class="mt-3 mb-3 pl-1 pr-1"
                   @click="removeWorkspace(workspace)"
                 >
                   <v-icon>mdi-close</v-icon>
@@ -107,8 +144,8 @@ export default {
     tab: null,
     valid: true,
     rules: {
-      namerequired: function (val) {
-        return !!val || t("settings.namerequired");
+      valuerequired: function (val) {
+        return val ? true : t("settings.valuerequired");
       },
     },
   }),
@@ -123,7 +160,7 @@ export default {
     },
     checkWorkspaceName(val) {
       if (this.settings.workspaces.filter((w) => w.name === val).length > 1) {
-        return this.tt("settings.nameunique");
+        return t("settings.nameunique");
       }
 
       return true;
@@ -228,6 +265,7 @@ export default {
 .settings-card .settings-toolbar {
   position: fixed;
   width: 100%;
+  z-index: 101;
 }
 
 .settings-container {

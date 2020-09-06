@@ -3,7 +3,9 @@ import {
 } from 'electron';
 
 import fs from 'fs';
+import path from 'path';
 import Picture from "../model/picture/Picture";
+import Workspace from '../model/Workspace';
 
 export default class PictureWorker {
 

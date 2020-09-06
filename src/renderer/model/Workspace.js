@@ -28,5 +28,40 @@ export default class Workspace {
          * @type {Boolean}
          */
         this.subdirectories = true;
+
+        /**
+         * @member
+         * @public
+         * @type {Boolean}
+         */
+        this.downloadSourcePictures = true;
+
+        /**
+         * @member
+         * @public
+         * @type {Boolean}
+         */
+        this.convertToJpg = true;
+
+        /**
+         * @member
+         * @public
+         * @type {Boolean}
+         */
+        this.includeTags = true;
+
+        /**
+         * @member
+         * @public
+         * @type {Boolean}
+         */
+        this.includeMetadata = true;
+
+        /**
+         * @member
+         * @public
+         * @type {Boolean}
+         */
+        this.namingConvention = "{md5}_{provider}.{extension}";
     }
 }
