@@ -6,14 +6,21 @@ import fs from 'fs';
 import path from 'path';
 import Picture from "../model/picture/Picture";
 import Workspace from '../model/Workspace';
+import Jimp from 'jimp';
 
 export default class PictureWorker {
 
     /** 
      * @param {String} url
+     * @param {Buffer} existingBuffer     
      * @returns {Promise}
      */
-    downloadPicture(url) {
+    downloadPicture(url, existingBuffer) {
+
+        if (existingBuffer && existingBuffer.length) {
+            return Promise.resolve(existingBuffer);
+        }
+
         return new Promise((resolve, reject) => {
             const request = remote.net.request(url);
             let buffer = null;
@@ -97,6 +104,7 @@ export default class PictureWorker {
      * @returns {Promise}
      */
     savePicture(path, buffer) {
+
         return new Promise((resolve, reject) => {
             fs.open(path, 'w', function (err, fd) {
                 if (err) {
@@ -116,6 +124,36 @@ export default class PictureWorker {
                                     resolve();
                                 }
                             });
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    /**
+     * 
+     * @param {Buffer} buffer 
+     */
+    //https://github.com/oliver-moran/jimp/tree/master/packages/jimp#writing-to-buffers
+    convertPictureToJpg(buffer, isjpg) {
+
+        if (isjpg) {
+            return Promise.resolve(buffer);
+        }
+
+        return new Promise((resolve, reject) => {
+            Jimp.read(buffer, (err, image) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    image.getBuffer(Jimp.MIME_JPEG, (err, newBuffer) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        else {
+                            resolve(newBuffer);
                         }
                     });
                 }

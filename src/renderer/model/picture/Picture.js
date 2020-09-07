@@ -134,6 +134,13 @@ export default class Picture {
          * @type {Boolean}
          */
         this._hasChildren = false;
+
+        /**
+         * @member
+         * @protected
+         * @type {String}
+         */
+        this._extension = null;
     }
 
     /**
@@ -304,8 +311,13 @@ export default class Picture {
      * @type {String}
      */
     get extension() {
-        const index = this._url.lastIndexOf('.');
-        return this._url.substr(index + 1, this._url.length - index);
+
+        if (!this._extension) {
+            const index = this._downloadUrl.lastIndexOf('.');
+            this._extension = this._downloadUrl.substr(index + 1, this._downloadUrl.length - index);
+        }
+
+        return this._extension;
     }
 
     /**

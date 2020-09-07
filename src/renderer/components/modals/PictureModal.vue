@@ -249,20 +249,6 @@ export default {
         }
       }
 
-      const pictureName = StringUtils.format(workspace.namingConvention, {
-        id: this.picture.id,
-        md5: this.picture.md5,
-        provider: this.picture.provider,
-        tagString: this.picture.tagString,
-        rating: this.picture.rating,
-        score: this.picture.score,
-        width: this.picture.width,
-        height: this.picture.height,
-        dimensions: this.picture.dimensions,
-        extension: this.picture.extension,
-      });
-
-      const picturePath = path.join(workspace.path, pictureName);
       const worker = new PictureWorker();
 
       this.working = true;
@@ -281,51 +267,72 @@ export default {
         this.saving = false;
       };
 
-      const success = () => {
-        this.$refs.toaster.info(
-          StringUtils.cformat(t("op.picturesaved"), workspace.name, pictureName)
-        );
+      worker
+        .downloadPicture(
+          workspace.downloadSourcePictures
+            ? this.picture.downloadUrl
+            : this.picture.url,
+          this.sourceImageBuffer
+        )
+        .then((buffer) => {
+          this.sourceImageBuffer = buffer;
 
-        this.imagePath = picturePath;
-        this.working = false;
-        this.saving = false;
-      };
+          const isjpg =
+            !workspace.convertToJpg ||
+            this.picture.extension.toLowerCase() === "jpg" ||
+            this.picture.extension.toLowerCase() === "jpeg";
 
-      if (this.sourceImageBuffer) {
-        worker
-          .savePicture(picturePath, this.sourceImageBuffer)
-          .then(() => {
-            success();
-          })
-          .catch((err) => {
-            console.log("ERR", err);
-            error();
-          });
-      } else {
-        worker
-          .downloadPicture(
-            workspace.downloadSourcePictures
-              ? this.picture.downloadUrl
-              : this.picture.url
-          )
-          .then((buffer) => {
-            this.sourceImageBuffer = buffer;
+          worker
+            .convertPictureToJpg(buffer, isjpg)
+            .then((buffer) => {
+              const pictureName = StringUtils.format(
+                workspace.namingConvention,
+                {
+                  id: this.picture.id,
+                  md5: this.picture.md5,
+                  provider: this.picture.provider,
+                  tagString: this.picture.tagString,
+                  rating: this.picture.rating,
+                  score: this.picture.score,
+                  width: this.picture.width,
+                  height: this.picture.height,
+                  dimensions: this.picture.dimensions,
+                  extension: workspace.convertToJpg
+                    ? "jpg"
+                    : this.picture.extension,
+                }
+              );
+              const picturePath = path.join(workspace.path, pictureName);
 
-            worker
-              .savePicture(picturePath, buffer)
-              .then(() => {
-                success();
-              })
-              .catch((err) => {
-                console.log("ERR", err);
-                error();
-              });
-          })
-          .catch((err) => {
-            console.log("ERR", err);
-            error();
-          });
-      }
+              worker
+                .savePicture(picturePath, buffer)
+                .then(() => {
+                  this.$refs.toaster.info(
+                    StringUtils.cformat(
+                      t("op.picturesaved"),
+                      workspace.name,
+                      pictureName
+                    )
+                  );
+
+                  this.imagePath = picturePath;
+                  this.working = false;
+                  this.saving = false;
+                })
+                .catch((err) => {
+                  console.log("ERR", err);
+                  error();
+                });
+            })
+            .catch((err) => {
+              console.log("ERR", err);
+              error();
+            });
+        })
+        .catch((err) => {
+          console.log("ERR", err);
+          error();
+        });
     },
   },
   created() {
