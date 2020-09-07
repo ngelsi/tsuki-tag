@@ -33,7 +33,9 @@ let whiteListedModules = [
   'roboto-fontface',
   'vuetify',
   'xml2js',
-  'jimp'
+  'jimp',
+  'piexifjs',
+  'base64-arraybuffer'
 ]
 
 let rendererConfig = {
@@ -195,7 +197,7 @@ if (process.env.NODE_ENV === 'production') {
   rendererConfig.devtool = ''
 
   rendererConfig.plugins.push(
-    new MinifyPlugin(),
+    // new MinifyPlugin(),
     new CopyWebpackPlugin([{
       from: path.join(__dirname, '../static'),
       to: path.join(__dirname, '../dist/electron/static'),

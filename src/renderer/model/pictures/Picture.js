@@ -321,6 +321,24 @@ export default class Picture {
     }
 
     /**
+     * @property
+     * @public
+     * @type {Array<string>}
+     */
+    get metadata() {
+        return [
+            `PROVIDER: ${this.provider}`,
+            `ID: ${this.id}`,
+            `MD5: ${this.md5}`,
+            `URL: ${this.url}`,
+            `SOURCE: ${this.source}`,
+            `DOWNLOADURL: ${this.downloadUrl}`,
+            `RATING: ${this.rating}`,
+            `SCORE: ${this.score}`
+        ];
+    }
+
+    /**
      * Sets the fields of the picture from the provided object.
      * @method
      * @abstract

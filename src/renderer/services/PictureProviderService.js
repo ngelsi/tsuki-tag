@@ -13,7 +13,7 @@ import {
 import {
     ProviderFilter
 } from "../model/ProviderFilter";
-import Picture from "../model/Picture/Picture";
+import Picture from "../model/pictures/Picture";
 import { GelbooruProvider } from "./pictureproviders/GelbooruProvider";
 
 /**

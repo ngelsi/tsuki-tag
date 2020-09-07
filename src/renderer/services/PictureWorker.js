@@ -3,10 +3,13 @@ import {
 } from 'electron';
 
 import fs from 'fs';
-import path from 'path';
-import Picture from "../model/picture/Picture";
+import path, { resolve } from 'path';
+import Picture from "../model/pictures/Picture";
 import Workspace from '../model/Workspace';
 import Jimp from 'jimp';
+import base64a from 'base64-arraybuffer';
+import exif, { piexif } from 'piexifjs';
+import { exit } from 'process';
 
 export default class PictureWorker {
 
@@ -62,40 +65,71 @@ export default class PictureWorker {
      *  @returns {String}     
      */
     convertToBase64(buffer) {
+        return base64a.encode(buffer);
+    }
 
-        var mime;
-        var a = new Uint8Array(buffer);
-        var nb = a.length;
+    /**     
+     * @param {String} str 
+     * @returns {Buffer}
+     */
+    convertFromBase64(str) {
+        return base64a.decode(str);
+    }
 
-        if (nb < 4) {
-            return null;
+    /**     
+     * @param {String} str 
+     * @returns {Array<number>}
+     */
+    convertStringToByteArray(str) {
+        var byteArray = [];
+        var buffer = new Buffer(str, 'utf16le');
+
+        for (var i = 0; i < buffer.length; i++) {
+            byteArray.push(buffer[i]);
         }
 
-        var b0 = a[0];
-        var b1 = a[1];
-        var b2 = a[2];
-        var b3 = a[3];
+        return byteArray;
+    }
 
-        if (b0 == 0x89 && b1 == 0x50 && b2 == 0x4E && b3 == 0x47) {
-            mime = 'image/png';
-        }
-        else if (b0 == 0xff && b1 == 0xd8) {
-            mime = 'image/jpeg';
-        }
-        else if (b0 == 0x47 && b1 == 0x49 && b2 == 0x46) {
-            mime = 'image/gif';
+    /**
+     * @param {Buffer} buffer 
+     * @param {Picture} picture 
+     * @param {Boolean} isjpg
+     * @param {Boolean} includeTags 
+     * @param {Boolean} includeMetadata 
+     * @returns {Promise}
+     */
+    processMetadata(buffer, picture, isjpg, includeTags, includeMetadata) {
+        if (!isjpg || (!includeMetadata && !includeTags)) {
+            return Promise.resolve(buffer);
         }
         else {
-            return null;
-        }
 
-        var binary = "";
-        for (var i = 0; i < nb; i++) {
-            binary += String.fromCharCode(a[i]);
-        }
+            return new Promise((resolve, reject) => {
+                try {
+                    const binary = buffer.toString("binary");
+                    const metadata = exif.load(binary);
+                    metadata["0th"][exif.ImageIFD.Software] = "Tsuki-tag";
 
-        var base64 = window.btoa(binary);
-        return base64;
+                    if (includeTags) {
+                        metadata["0th"][exif.ImageIFD.XPKeywords] = this.convertStringToByteArray(picture.tags.join('; '))
+                    }
+
+                    if (includeMetadata) {
+                        metadata["0th"][exif.ImageIFD.XPComment] = this.convertStringToByteArray(picture.metadata.join('\r\n'));
+                    }
+
+                    const metadataBinary = exif.dump(metadata);
+                    const newBinary = exif.insert(metadataBinary, binary);
+
+                    const newBuffer = Buffer.from(newBinary, "binary");
+                    resolve(newBuffer);
+                }
+                catch (err) {
+                    reject(err);
+                }
+            });
+        }
     }
 
     /**     

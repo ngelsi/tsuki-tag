@@ -6,7 +6,7 @@ import {
 
 import {
     Picture
-} from "../../model/Picture/Picture";
+} from "../../model/pictures/Picture";
 
 import {
     remote

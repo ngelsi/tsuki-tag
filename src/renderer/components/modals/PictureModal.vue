@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import Picture from "../../model/picture/Picture";
+import Picture from "../../model/pictures/Picture";
 import PictureTags from "../parts/PictureTags";
 import PictureMetadata from "../parts/PictureMetadata";
 import PictureWorker from "../../services/PictureWorker";
@@ -278,46 +278,62 @@ export default {
           this.sourceImageBuffer = buffer;
 
           const isjpg =
-            !workspace.convertToJpg ||
             this.picture.extension.toLowerCase() === "jpg" ||
             this.picture.extension.toLowerCase() === "jpeg";
 
+          const dontconvert = !workspace.convertToJpg || isjpg;
+          const processMetadata = isjpg || workspace.convertToJpg;
+
           worker
-            .convertPictureToJpg(buffer, isjpg)
+            .convertPictureToJpg(buffer, dontconvert)
             .then((buffer) => {
-              const pictureName = StringUtils.format(
-                workspace.namingConvention,
-                {
-                  id: this.picture.id,
-                  md5: this.picture.md5,
-                  provider: this.picture.provider,
-                  tagString: this.picture.tagString,
-                  rating: this.picture.rating,
-                  score: this.picture.score,
-                  width: this.picture.width,
-                  height: this.picture.height,
-                  dimensions: this.picture.dimensions,
-                  extension: workspace.convertToJpg
-                    ? "jpg"
-                    : this.picture.extension,
-                }
-              );
-              const picturePath = path.join(workspace.path, pictureName);
-
               worker
-                .savePicture(picturePath, buffer)
-                .then(() => {
-                  this.$refs.toaster.info(
-                    StringUtils.cformat(
-                      t("op.picturesaved"),
-                      workspace.name,
-                      pictureName
-                    )
+                .processMetadata(
+                  buffer,
+                  this.picture,
+                  processMetadata,
+                  workspace.includeTags,
+                  workspace.includeMetadata
+                )
+                .then((buffer) => {
+                  const pictureName = StringUtils.format(
+                    workspace.namingConvention,
+                    {
+                      id: this.picture.id,
+                      md5: this.picture.md5,
+                      provider: this.picture.provider,
+                      tagString: this.picture.tagString,
+                      rating: this.picture.rating,
+                      score: this.picture.score,
+                      width: this.picture.width,
+                      height: this.picture.height,
+                      dimensions: this.picture.dimensions,
+                      extension: workspace.convertToJpg
+                        ? "jpg"
+                        : this.picture.extension,
+                    }
                   );
+                  const picturePath = path.join(workspace.path, pictureName);
 
-                  this.imagePath = picturePath;
-                  this.working = false;
-                  this.saving = false;
+                  worker
+                    .savePicture(picturePath, buffer)
+                    .then(() => {
+                      this.$refs.toaster.info(
+                        StringUtils.cformat(
+                          t("op.picturesaved"),
+                          workspace.name,
+                          pictureName
+                        )
+                      );
+
+                      this.imagePath = picturePath;
+                      this.working = false;
+                      this.saving = false;
+                    })
+                    .catch((err) => {
+                      console.log("ERR", err);
+                      error();
+                    });
                 })
                 .catch((err) => {
                   console.log("ERR", err);

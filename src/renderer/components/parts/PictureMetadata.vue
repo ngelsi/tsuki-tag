@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import Picture from "../../model/picture/Picture";
+import Picture from "../../model/pictures/Picture";
 import { t } from "../../services/Localizer";
 import Toaster from "./Toaster";
 import { remote } from "electron";

@@ -38,7 +38,7 @@ import PictureCollection from "./parts/PictureCollection";
 import PictureModal from "./modals/PictureModal";
 import PictureTags from "./parts/PictureTags";
 import ProviderFilter from "../model/ProviderFilter";
-import Picture from "../model/picture/Picture";
+import Picture from "../model/pictures/Picture";
 import DataStore from "../services/DataStore";
 import AppSettings from "../model/AppSettings";
 import { t } from "../services/Localizer";

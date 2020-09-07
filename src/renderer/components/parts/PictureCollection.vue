@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import Picture from "../../model/picture/Picture";
+import Picture from "../../model/pictures/Picture";
 
 export default {
   name: "picture-collection",

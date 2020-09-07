@@ -5,7 +5,7 @@ import {
 import {
     OnlinePictureProvider
 } from './PictureProvider';
-import SafebooruPicture from '../../model/Picture/SafebooruPicture';
+import SafebooruPicture from '../../model/pictures/SafebooruPicture';
 
 /**
  * @class

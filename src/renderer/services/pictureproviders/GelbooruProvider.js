@@ -5,7 +5,7 @@ import {
 import {
     OnlinePictureProvider
 } from './PictureProvider';
-import GelbooruPicture from '../../model/Picture/GelbooruPicture';
+import GelbooruPicture from '../../model/pictures/GelbooruPicture';
 
 /**
  * @class

@@ -57,7 +57,7 @@ const en = {
     "op.saveselect": "Save to workspace...",
     "op.nodefaultworkspace": "No default workspace has been configured yet.",
     "op.picturesaved": "Saved to workspace '{0}' as '{1}'",
-    "op.picturesaveerror": "Could not save picture. Check writing rights and access to workspace {0}",
+    "op.picturesaveerror": "Could not save picture. Check writing rights and access to workspace '{0}'.",
 
     "picture.rating": "Rating",
     "s": "Safe",
