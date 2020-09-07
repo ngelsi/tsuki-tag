@@ -197,7 +197,7 @@ if (process.env.NODE_ENV === 'production') {
   rendererConfig.devtool = ''
 
   rendererConfig.plugins.push(
-    // new MinifyPlugin(),
+    // new MinifyPlugin(), //https://github.com/SimulatedGREG/electron-vue/issues/907
     new CopyWebpackPlugin([{
       from: path.join(__dirname, '../static'),
       to: path.join(__dirname, '../dist/electron/static'),
