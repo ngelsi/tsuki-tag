@@ -91,7 +91,7 @@ export default {
     /** @param {String} tag */
     prettifyTag(tag) {
       if (tag) {
-        return tag.replace("_", " ");
+        return tag.replace(/_/g, " ");
       }
     },
     getHeight() {
