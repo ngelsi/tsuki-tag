@@ -112,7 +112,7 @@ export default class PictureWorker {
                     metadata["0th"][exif.ImageIFD.Software] = "Tsuki-tag";
 
                     if (includeTags) {
-                        metadata["0th"][exif.ImageIFD.XPKeywords] = this.convertStringToByteArray(picture.tags.join('; '))
+                        metadata["0th"][exif.ImageIFD.XPKeywords] = this.convertStringToByteArray(picture.tags.concat(picture.userTags).join('; '))
                     }
 
                     if (includeMetadata) {

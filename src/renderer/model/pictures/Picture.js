@@ -131,6 +131,13 @@ export default class Picture {
         /**
          * @member
          * @protected
+         * @type {String}
+         */
+        this._userTags = "";
+
+        /**
+         * @member
+         * @protected
          * @type {Boolean}
          */
         this._hasChildren = false;
@@ -150,6 +157,20 @@ export default class Picture {
      */
     get tags() {
         return this._tags.trim().split(' ');
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {Array<String>}
+     */
+    get userTags() {
+        return [
+            `rating_${this._rating}`,
+            `provider_${this._provider}`
+        ].concat(
+            this._userTags.trim().split(' ')
+        );
     }
 
     /**
@@ -194,7 +215,7 @@ export default class Picture {
      * @type {String}
      */
     get tagString() {
-        return this._tags;
+        return this._tags.trim().split(' ').concat(this._userTags.trim().split(' ').join(' '));
     }
 
     /**
@@ -336,6 +357,38 @@ export default class Picture {
             `RATING: ${this.rating}`,
             `SCORE: ${this.score}`
         ];
+    }
+
+    /**     
+     * @param {('user'|'tag')} target 
+     * @param {String} tag 
+     */
+    addTag(target, tag) {
+        if (target === 'user') {
+            const newArray = this._userTags.trim().split(' ');
+            newArray.push(tag);
+
+            this._userTags = newArray.join(' ');
+        }
+        else {
+            const newArray = this._tags.trim().split(' ');
+            newArray.push(tag);
+
+            this._tags = newArray.join(' ');
+        }
+    }
+
+    /**     
+     * @param {('user'|'tag')} target 
+     * @param {String} tag 
+     */
+    removeTag(target, tag) {
+        if (target === 'user') {
+            this._userTags = this._userTags.trim().split(' ').filter(t => t !== tag).join(' ');
+        }
+        else {
+            this._tags = this._tags.trim().split(' ').filter(t => t !== tag).join(' ');
+        }
     }
 
     /**

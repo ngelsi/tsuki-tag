@@ -1,20 +1,45 @@
 <template>
   <v-list dense class="picture-tags">
     <v-subheader>
-      <span>{{tt("picture.tags")}}</span>
-      <span v-if="limit">
-        &nbsp;
-        {{limit}}/{{tagCount}}
-      </span>
-      <span v-else>
-        &nbsp;
-        {{tagCount}}
+      <div v-if="!adding">
+        <span>{{tt("picture.tags")}}</span>
+        <span v-if="limit">
+          &nbsp;
+          {{limit}}/{{tagCount}}
+        </span>
+        <span v-else>
+          &nbsp;
+          {{tagCount}}
+        </span>
+      </div>
+      <div v-else class="tag-add">
+        <v-text-field
+          solo
+          dense
+          flat
+          outlined
+          autofocus
+          v-model="addingTag"
+          v-on:keyup.enter="addClick"
+        ></v-text-field>
+      </div>
+      <span v-if="editable">
+        <a
+          class="purple--text text-decoration-none text-h6 ml-2"
+          v-if="editable"
+          @click="addClick"
+        >+</a>
       </span>
     </v-subheader>
     <div class="tag-wrapper" v-bind:style="{'height': getHeight()}">
       <v-list-item v-for="tag in tags" :key="tag.name" class="tag-container pl-2">
         <v-list-item-content class="tag-content pa-0">
           <div>
+            <a
+              class="purple--text text-decoration-none"
+              v-if="editable"
+              @click="tagChanged(tag.name, 'remove')"
+            >x</a>
             <a class="purple--text text-decoration-none" @click="tagSelected(tag.name, 'add')">+</a>
             <a class="purple--text text-decoration-none" @click="tagSelected(tag.name, 'remove')">-</a>
             <a
@@ -40,6 +65,10 @@ export default {
     tags: [],
     /** @type {Number} */
     tagCount: 0,
+    /** @type {Boolean} */
+    adding: false,
+    /** @type {String} */
+    addingTag: null,
   }),
   props: {
     /** @type {Array<Picture>} */
@@ -50,6 +79,8 @@ export default {
     showCount: Boolean,
     /** @type {Number} */
     height: Number,
+    /** @type {Boolean} */
+    editable: Boolean,
   },
   components: {},
   methods: {
@@ -107,6 +138,28 @@ export default {
         action: action,
       });
     },
+    tagChanged(tag, action) {
+      this.$emit("tagChanged", {
+        tag: tag,
+        action: action,
+      });
+
+      this.calculateTags();
+    },
+    addClick() {
+      if (this.adding && this.addingTag) {
+        this.$emit("tagChanged", {
+          tag: this.addingTag.replace(" ", "_"),
+          action: "add",
+        });
+
+        this.adding = false;
+        this.addingTag = null;
+        this.calculateTags();
+      } else {
+        this.adding = true;
+      }
+    },
   },
   created() {
     this.calculateTags();
@@ -143,5 +196,28 @@ export default {
 
 .picture-tags .tag-content .tag-content-count {
   font-size: 12px;
+}
+
+.picture-tags .tag-add .v-input {
+  min-height: 20px !important;
+  height: 20px !important;
+}
+
+.picture-tags .tag-add .v-input .v-input__control {
+  min-height: 20px !important;
+  height: 20px !important;
+}
+
+.picture-tags .tag-add .v-input .v-input__slot {
+  min-height: 20px !important;
+  height: 20px !important;
+}
+
+.picture-tags .tag-add .v-text-field__details {
+  display: none !important;
+}
+
+.picture-tags .tag-add .v-input input {
+  font-size: 13px;
 }
 </style>

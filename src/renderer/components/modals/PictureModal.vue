@@ -68,6 +68,8 @@
                 :pictures="pictures"
                 :showCount="false"
                 :height="tagHeight"
+                :editable="true"
+                v-on:tagChanged="tagChanged"
                 v-on:tagSelected="tagSelected"
               ></PictureTags>
             </div>
@@ -178,6 +180,15 @@ export default {
     tagSelected(event) {
       this.$emit("tagSelected", event);
       this.close();
+    },
+
+    /** @param {Object} event */
+    tagChanged(event) {
+      if (event.action === "remove") {
+        this.picture.removeTag("tag", event.tag);
+      } else if (event.action === "add") {
+        this.picture.addTag("tag", event.tag);
+      }
     },
 
     /** @param {Picture} picture */
