@@ -3,6 +3,7 @@
     <v-toolbar dark class="rounded-0 provider-toolbar">
       <ProviderNavigation></ProviderNavigation>
       <TagSelector ref="tagSelector" v-on:tagschanged="tagsChanged"></TagSelector>
+      <Refresher></Refresher>
       <ProviderSettings
         v-on:providersChanged="providersChanged"
         :providers="availableProviders"
@@ -44,6 +45,7 @@ import ProviderFilter from "../model/ProviderFilter";
 import Picture from "../model/pictures/Picture";
 import DataStore from "../services/DataStore";
 import AppSettings from "../model/AppSettings";
+import Refresher from "./parts/Refresher";
 import { t } from "../services/Localizer";
 import { OnlinePictureProviderService } from "../services/PictureProviderService";
 import StringUtils from "../services/StringUtils";
@@ -78,6 +80,7 @@ export default {
     ProviderSettings,
     PictureModal,
     PictureTags,
+    Refresher,
   },
   methods: {
     /**

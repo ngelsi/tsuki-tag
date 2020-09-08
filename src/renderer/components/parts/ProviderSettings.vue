@@ -2,9 +2,14 @@
   <div class="text-center">
     <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
       <template v-slot:activator="{ on, attrs }">
-        <v-btn icon v-bind="attrs" v-on="on">
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on: tooltip }">
+            <v-btn icon v-bind="attrs" v-on="{ ...tooltip, ...on }">
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+          <span>{{tt("search.providersettings")}}</span>
+        </v-tooltip>
       </template>
 
       <v-card>

@@ -2,7 +2,14 @@
   <div>
     <v-menu v-model="menuShowing" :close-on-content-click="false">
       <template v-slot:activator="{ on, attrs }">
-        <v-icon dark v-bind="attrs" v-on="on">mdi-swap-horizontal-bold</v-icon>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on: tooltip }">
+            <v-btn icon v-bind="attrs" v-on="{ ...tooltip, ...on }">
+              <v-icon>mdi-swap-horizontal-bold</v-icon>
+            </v-btn>
+          </template>
+          <span>{{tt("nav.nav")}}</span>
+        </v-tooltip>
       </template>
       <v-list>
         <v-list-item-group>

@@ -7,8 +7,10 @@ const en = {
     "misc.close": "Close",
     "misc.copy": "Copy",
     "misc.copied": "Copied to clipboard.",
+    "misc.refresh": "Refresh",
 
     "search.providers": "Providers",
+    "search.providersettings": "Provider settings",
     "search.ratings": "Ratings",
     "search.empty": "No more results.",
     "search.providerempty": "No more results from provider '{provider}'.",
@@ -19,6 +21,7 @@ const en = {
 
     "nav.onlineproviders": "Browse online",
     "nav.settings": "Settings",
+    "nav.nav": "Navigation",
 
     "settings.workspaces": "Workspaces",
     "settings.noworkspaces": "No workspaces have been configured yet.",
