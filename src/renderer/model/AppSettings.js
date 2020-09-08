@@ -15,6 +15,13 @@ export default class AppSettings {
          * @type {Array<Workspace>}
          */
         this.workspaces = [];
+
+        /**
+         * @member
+         * @public
+         * @type {Array<String>}
+         */
+        this.ratings = [];
     }
 
     /**
@@ -38,6 +45,11 @@ export default class AppSettings {
             ],
             workspaces: [
 
+            ],
+            ratings: [
+                's',
+                'q',
+                'e'
             ]
         };
     }

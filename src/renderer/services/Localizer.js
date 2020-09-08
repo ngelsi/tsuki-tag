@@ -9,6 +9,7 @@ const en = {
     "misc.copied": "Copied to clipboard.",
 
     "search.providers": "Providers",
+    "search.ratings": "Ratings",
     "search.empty": "No more results.",
     "search.providerempty": "No more results from provider '{provider}'.",
     "search.processerror": "Could not process pictures from provider '{provider}'.",

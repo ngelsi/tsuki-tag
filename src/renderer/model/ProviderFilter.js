@@ -24,6 +24,12 @@ export default class ProviderFilter {
          * @type {Array<String>}
          */
         this._providers = [];
+
+        /**
+         * @private
+         * @type {Array<String>}
+         */
+        this._ratings = [];
     }
 
     /**
@@ -40,6 +46,22 @@ export default class ProviderFilter {
      */
     set providers(providers) {
         this._providers = providers;
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {Array<string>}
+     */
+    get ratings() {
+        return this._ratings;
+    }
+
+    /**
+     * @param {Array<String>} ratings
+     */
+    set ratings(ratings) {
+        this._ratings = ratings;
     }
 
     /**
@@ -129,6 +151,7 @@ export default class ProviderFilter {
         f.limit = filter.limit;
         f.tagString = filter.tagString;
         f.providers = [...filter.providers];
+        f.ratings = [...filter.ratings];
 
         return f;
     }

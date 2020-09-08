@@ -7,6 +7,9 @@
         v-on:providersChanged="providersChanged"
         :providers="availableProviders"
         :selectedProviders="selectedProviders"
+        v-on:ratingsChanged="ratingsChanged"
+        :ratings="availableRatings"
+        :selectedRatings="selectedRatings"
       ></ProviderSettings>
     </v-toolbar>
     <v-container fluid class="provider-container">
@@ -44,6 +47,7 @@ import AppSettings from "../model/AppSettings";
 import { t } from "../services/Localizer";
 import { OnlinePictureProviderService } from "../services/PictureProviderService";
 import StringUtils from "../services/StringUtils";
+import { app } from "electron";
 
 const providerService = new OnlinePictureProviderService();
 const dataStore = new DataStore();
@@ -153,6 +157,30 @@ export default {
           this.$refs.toaster.info(t("search.error"));
         });
     },
+    /**
+     * @param {Array<string>} event
+     */
+    ratingsChanged(event) {
+      dataStore
+        .get(AppSettings.name)
+        .then((/** @type {AppSettings} */ appsettings) => {
+          appsettings.ratings = event;
+          dataStore
+            .set(AppSettings.name, appsettings)
+            .then(() => {
+              this.filter.ratings = event;
+              this.resetState(true);
+            })
+            .catch((err) => {
+              console.log("ERR", err);
+              this.$refs.toaster.info(t("search.error"));
+            });
+        })
+        .catch((err) => {
+          console.log("ERR", err);
+          this.$refs.toaster.info(t("search.error"));
+        });
+    },
     getPictures() {
       if (this.loading || this.currentSearchFinished) {
         return;
@@ -199,10 +227,14 @@ export default {
               p1.md5.localeCompare(p2.md5)
             );
             serviceResult.pictures.forEach((picture) => {
+              const ratingAllowed = localFilter.ratings.includes(
+                picture.rating
+              );
               const existing = this.pictures.filter(
                 (p) => p.md5 === picture.md5
               );
-              if (!existing || existing.length === 0) {
+
+              if ((!existing || existing.length === 0) && ratingAllowed) {
                 this.pictures.push(picture);
               }
             });
@@ -258,6 +290,12 @@ export default {
     selectedProviders: function () {
       return this.filter.providers;
     },
+    availableRatings: () => {
+      return AppSettings.default.ratings;
+    },
+    selectedRatings: function () {
+      return this.filter.ratings;
+    },
     initialHeight: () => {
       return `${window.innerHeight * 1.1}px`;
     },
@@ -269,6 +307,7 @@ export default {
       .get(AppSettings.name)
       .then((/** @type {AppSettings} */ appsettings) => {
         this.filter.providers = appsettings.onlineProviders;
+        this.filter.ratings = appsettings.ratings;
         this.getPictures();
       })
       .catch((err) => {
