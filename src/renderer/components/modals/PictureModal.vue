@@ -1,8 +1,14 @@
 <template>
-  <v-dialog v-model="showing" fullscreen hide-overlay transition="dialog-bottom-transition">
+  <v-dialog
+    persistent
+    v-model="showing"
+    fullscreen
+    hide-overlay
+    transition="dialog-bottom-transition"
+  >
     <v-card class="picturemodal-card rounded-0">
       <v-toolbar fixed dark>
-        <v-btn icon dark @click="close">
+        <v-btn :disabled="working" icon dark @click="close">
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-spacer></v-spacer>
