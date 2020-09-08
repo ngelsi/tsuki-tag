@@ -82,6 +82,7 @@ export default {
   height: 95%;
   padding: 0;
   min-width: 245px;
+  background-color: #1e1e1e !important;
 }
 
 .picture-metadata-tooltip .v-list--dense .v-list-item,
