@@ -52,6 +52,13 @@ export default class ProviderFilter {
     }
 
     /**
+     * @param {String} tagString
+     */
+    set tagString(tagString) {
+        this._tags = tagString;
+    }
+
+    /**
      * @property
      * @public
      * @type {Array<String>}
@@ -106,5 +113,23 @@ export default class ProviderFilter {
      */
     set page(page) {
         this._page = page;
+    }
+
+    /**
+     * @public
+     * @static
+     * @param {ProviderFilter} filter
+     * @returns {ProviderFilter}
+     */
+    static fromFilter(filter) {
+
+        const f = new ProviderFilter();
+
+        f.page = filter.page;
+        f.limit = filter.limit;
+        f.tagString = filter.tagString;
+        f.providers = [...filter.providers];
+
+        return f;
     }
 }

@@ -43,6 +43,7 @@ import DataStore from "../services/DataStore";
 import AppSettings from "../model/AppSettings";
 import { t } from "../services/Localizer";
 import { OnlinePictureProviderService } from "../services/PictureProviderService";
+import StringUtils from "../services/StringUtils";
 
 const providerService = new OnlinePictureProviderService();
 const dataStore = new DataStore();
@@ -62,6 +63,8 @@ export default {
     currentSearchFinished: false,
     /** @type {Picture} */
     currentPicture: null,
+    /** @type {Array<string>} */
+    currentSearchFinishedProviders: [],
   }),
   components: {
     ProviderNavigation,
@@ -80,6 +83,7 @@ export default {
       this.filter.page = 0;
       this.pictures = [];
       this.currentSearchFinished = false;
+      this.currentSearchFinishedProviders = [];
 
       let container = window;
       container.scrollTo(0, 0);
@@ -141,10 +145,12 @@ export default {
             })
             .catch((err) => {
               console.log("ERR", err);
+              this.$refs.toaster.info(t("search.error"));
             });
         })
         .catch((err) => {
           console.log("ERR", err);
+          this.$refs.toaster.info(t("search.error"));
         });
     },
     getPictures() {
@@ -159,20 +165,60 @@ export default {
         this.nextBatch = false;
       }
 
+      const localFilter = ProviderFilter.fromFilter(this.filter);
+      if (
+        this.currentSearchFinishedProviders &&
+        this.currentSearchFinishedProviders.length
+      ) {
+        localFilter.providers = localFilter.providers.filter(
+          (l) => !this.currentSearchFinishedProviders.includes(l)
+        );
+      }
+
+      console.log("filter", localFilter);
+
       providerService
-        .get(this.filter)
-        .then((data) => {
-          if (!data || data.length === 0) {
+        .get(localFilter)
+        .then((serviceResult) => {
+          if (
+            !serviceResult ||
+            !serviceResult.pictures ||
+            serviceResult.pictures.length === 0
+          ) {
             this.currentSearchFinished = true;
+
+            if (serviceResult.errors && serviceResult.errors.length) {
+              serviceResult.errors.forEach((error) => {
+                this.$refs.toaster.info(error);
+              });
+            } else {
+              this.$refs.toaster.info(t("search.empty"));
+            }
           } else {
-            data = data.sort((p1, p2) => p1.md5.localeCompare(p2.md5));
-            data.forEach((picture) => {
+            serviceResult.pictures = serviceResult.pictures.sort((p1, p2) =>
+              p1.md5.localeCompare(p2.md5)
+            );
+            serviceResult.pictures.forEach((picture) => {
               const existing = this.pictures.filter(
                 (p) => p.md5 === picture.md5
               );
               if (!existing || existing.length === 0) {
                 this.pictures.push(picture);
               }
+            });
+
+            serviceResult.finishedProviders.forEach((provider) => {
+              this.currentSearchFinishedProviders.push(provider);
+
+              this.$refs.toaster.info(
+                StringUtils.format(t("search.providerempty"), {
+                  provider: t(provider),
+                })
+              );
+            });
+
+            serviceResult.errors.forEach((error) => {
+              this.$refs.toaster.info(error);
             });
           }
 
@@ -181,7 +227,9 @@ export default {
           }, 500);
         })
         .catch((err) => {
-          console.log("ERROR", err);
+          console.log("ERR", err);
+
+          this.$refs.toaster.info(t("search.error"));
           this.loading = false;
         });
     },
@@ -225,6 +273,7 @@ export default {
       })
       .catch((err) => {
         console.log("ERR", err);
+        this.$refs.toaster.info(t("search.error"));
       });
   },
   mounted() {
@@ -234,11 +283,6 @@ export default {
     nextBatch(val) {
       if (val && !this.loading) {
         this.getPictures();
-      }
-    },
-    currentSearchFinished(val) {
-      if (val) {
-        this.$refs.toaster.info(t("search.empty"));
       }
     },
   },

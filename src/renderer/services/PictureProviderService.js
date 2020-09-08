@@ -15,6 +15,10 @@ import {
 } from "../model/ProviderFilter";
 import Picture from "../model/pictures/Picture";
 import { GelbooruProvider } from "./pictureproviders/GelbooruProvider";
+import ProviderResult from "../model/ProviderResult";
+import ProviderServiceResult from "../model/ProviderServiceResult";
+import { t } from "./Localizer";
+import StringUtils from './StringUtils';
 
 /**
  * @class
@@ -48,7 +52,7 @@ class PictureProviderService {
      * @function
      * @abstract
      * @param {ProviderFilter} filter The filter object to be passed to the specified picture providers.
-     * @returns {Promise<Array<Picture>>}
+     * @returns {Promise<ProviderServiceResult>}
      */
     get(filter) { }
 
@@ -93,7 +97,7 @@ export class OnlinePictureProviderService extends PictureProviderService {
      * @function
      * @override
      * @param {ProviderFilter} filter The filter object to be passed to the specified picture providers.
-     * @returns {Promise<Array<Picture>>}
+     * @returns {Promise<ProviderServiceResult>}
      */
     get(filter) {
 
@@ -102,27 +106,47 @@ export class OnlinePictureProviderService extends PictureProviderService {
             /** @type {Array<Promise>} */
             const promises = [];
 
-            this._providers.forEach(provider => {
+            this._providers.forEach((provider) => {
                 if (filter.providers.indexOf(provider.name) >= 0) {
                     promises.push(provider.get(filter));
                 }
             });
 
             Promise.all(promises)
-                .then( /** @type {Array<Array<Picture>>} */ imageCollections => {
+                .then( /** @param {Array<ProviderResult>} results */ results => {
 
-                    /** @type {Array<Picture>} */
-                    const imageList = [];
+                    const serviceResult = new ProviderServiceResult();
 
-                    imageCollections.forEach( /** @type {Array<Picture>} */ images => {
-                        images.forEach( /** @type {Picture} */ image => {
-                            if (image && image instanceof Picture && image.md5) {
-                                imageList.push(image);
-                            }
-                        });
+                    results.forEach(/** @param {ProviderResult} result */ result => {
+
+                        if (result.pictures && result.pictures.length) {
+                            result.pictures.forEach(/** @param {Picture} image */ image => {
+                                if (image && image instanceof Picture && image.md5) {
+                                    serviceResult.pictures.push(image);
+                                }
+                            });
+                        }
+
+                        if (!result.succeeded || result.end) {
+                            serviceResult.finishedProviders.push(result.provider);
+                        }
+
+                        if (result.errorcode) {
+                            serviceResult.errors.push(
+                                StringUtils.format(t(result.errorcode), {
+                                    provider: t(result.provider)
+                                })
+                            );
+                        }
+
                     });
 
-                    resolve(imageList);
+                    console.log('service result');
+                    console.log('picture count ', serviceResult.pictures.length);
+                    console.log('finished providers ', serviceResult.finishedProviders);
+                    console.log('errors ', serviceResult.errors);
+
+                    resolve(serviceResult);
                 })
                 .catch(errors => {
                     reject(errors);

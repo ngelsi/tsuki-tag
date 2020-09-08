@@ -149,7 +149,7 @@ export default {
     addClick() {
       if (this.adding && this.addingTag) {
         this.$emit("tagChanged", {
-          tag: this.addingTag.replace(" ", "_"),
+          tag: this.addingTag.replace(/\s/g, "_"),
           action: "add",
         });
 

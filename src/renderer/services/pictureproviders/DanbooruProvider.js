@@ -5,6 +5,7 @@ import {
     OnlinePictureProvider
 } from './PictureProvider';
 import DanbooruPicture from "../../model/pictures/DanbooruPicture";
+import ProviderResult from "../../model/ProviderResult";
 
 /**
  * @class
@@ -105,5 +106,21 @@ export class DanbooruProvider extends OnlinePictureProvider {
         picture.fromData(rawDataItem);
 
         return picture;
+    }
+
+    /**
+     * The providers can try to process the returned error here.
+     * @function
+     * @override
+     * @param {*} err
+     * @param {ProviderResult} result
+     */
+    processError(err, result) {
+
+        //Can't have more than 2 tags for Danbooru 
+        if (err.toString().indexOf("422") !== -1) {
+            result.errorcode = "danbooru.taglimit";
+            result.end = true;
+        }
     }
 }

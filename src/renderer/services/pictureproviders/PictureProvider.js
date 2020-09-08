@@ -4,13 +4,12 @@ import {
     ProviderFilter
 } from "../../model/ProviderFilter";
 
-import {
-    Picture
-} from "../../model/pictures/Picture";
+import Picture from "../../model/pictures/Picture";
 
 import {
     remote
 } from 'electron';
+import ProviderResult from '../../model/ProviderResult';
 
 /** 
  * @class
@@ -46,7 +45,7 @@ export class PictureProvider {
      * @function
      * @abstract
      * @param {ProviderFilter} filter The filter object.
-     * @returns {Promise<Array<Picture>>}
+     * @returns {Promise<ProviderResult>}
      */
     get(filter) { }
 }
@@ -78,13 +77,17 @@ export class OnlinePictureProvider extends PictureProvider {
      * @function
      * @override
      * @param {ProviderFilter} filter The filter object.
-     * @returns {Promise<Array<Picture>>}
+     * @returns {Promise<ProviderResult>}
      */
     get(filter) {
 
         return new Promise((resolve, reject) => {
             const url = this.constructUrl(filter);
             const request = remote.net.request(url);
+
+            const result = new ProviderResult();
+            result.provider = this.name;
+
             let completeData = "";
 
             console.log('url', url);
@@ -114,17 +117,31 @@ export class OnlinePictureProvider extends PictureProvider {
                                     }
                                 });
 
-                                resolve(pictures);
+                                result.succeeded = true;
+                                result.pictures = pictures;
+                                result.end = !pictures || pictures.length === 0;
+
+                                resolve(result);
                             })
                             .catch(error => {
-                                reject(error);
+                                result.succeeded = false;
+                                result.end = true;
+                                result.errorcode = "search.processerror";
+
+                                this.processError(error, result);
+                                resolve(result);
                             });
                     });
                     response.on('data', (data) => {
                         completeData += data;
                     });
                 } else {
-                    reject(response.statusMessage);
+                    result.succeeded = false;
+                    result.end = true;
+                    result.errorcode = "search.httperror";
+
+                    this.processError(response.statusMessage || response.statusCode, result);
+                    resolve(result);
                 }
             });
 
@@ -158,4 +175,13 @@ export class OnlinePictureProvider extends PictureProvider {
      * @returns {Picture}
      */
     transformRawDataItem(rawDataItem) { }
+
+    /**
+     * The providers can try to process the returned error here.
+     * @function
+     * @abstract
+     * @param {*} err
+     * @param {ProviderResult} result
+     */
+    processError(err, result) { }
 }

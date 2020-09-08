@@ -10,7 +10,11 @@ const en = {
 
     "search.providers": "Providers",
     "search.empty": "No more results.",
+    "search.providerempty": "No more results from provider '{provider}'.",
+    "search.processerror": "Could not process pictures from provider '{provider}'.",
+    "search.httperror": "Communication failed with provider '{provider}'.",
     "search.tags": "Search tags",
+    "search.error": "Unknown errors happened during picture retrieval.",
 
     "nav.onlineproviders": "Browse online",
     "nav.settings": "Settings",

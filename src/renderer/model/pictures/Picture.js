@@ -215,7 +215,7 @@ export default class Picture {
      * @type {String}
      */
     get tagString() {
-        return this._tags.trim().split(' ').concat(this._userTags.trim().split(' ').join(' '));
+        return this._tags.trim().split(' ').concat(this._userTags.trim().split(' ')).join(' ');
     }
 
     /**
