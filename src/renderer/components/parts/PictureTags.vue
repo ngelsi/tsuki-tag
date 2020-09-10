@@ -125,6 +125,8 @@ export default {
       newTags = newTags.sort((t1, t2) => t1.count - t2.count).reverse();
       this.tagCount = newTags.length;
 
+      this.$emit("tagsSet", [...newTags]);
+
       if (this.limit) {
         newTags = newTags.slice(0, this.limit);
       }

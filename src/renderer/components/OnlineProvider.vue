@@ -2,7 +2,7 @@
   <v-card class="rounded-0 provider-card" :style="{'min-height': initialHeight}">
     <v-toolbar dark class="rounded-0 provider-toolbar">
       <ProviderNavigation></ProviderNavigation>
-      <TagSelector ref="tagSelector" v-on:tagschanged="tagsChanged"></TagSelector>
+      <TagSelector ref="tagSelector" v-on:tagschanged="tagsChanged" :seenTags="tagCollection"></TagSelector>
       <Refresher></Refresher>
       <ProviderSettings
         v-on:providersChanged="providersChanged"
@@ -21,6 +21,7 @@
             :limit="40"
             :showCount="true"
             v-on:tagSelected="tagSelected"
+            v-on:tagsSet="tagsSet"
           ></PictureTags>
         </v-col>
         <v-col class="provider-container-pictures">
@@ -71,6 +72,8 @@ export default {
     currentPicture: null,
     /** @type {Array<string>} */
     currentSearchFinishedProviders: [],
+    /** @type {Array<string>} */
+    tagCollection: [],
   }),
   components: {
     ProviderNavigation,
@@ -127,6 +130,13 @@ export default {
       } else if (event.action === "unique") {
         this.$refs.tagSelector.uniqueTag(event.tag);
       }
+    },
+
+    /**
+     * @param {Object} event
+     */
+    tagsSet(event) {
+      this.tagCollection = event.map((e) => e.name);
     },
 
     /**

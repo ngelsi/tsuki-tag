@@ -32,7 +32,10 @@ export default {
     loading: false,
     tags: [],
   }),
-  props: {},
+  props: {
+    /** @type {Array<string>} */
+    seenTags: Array,
+  },
   components: {},
   methods: {
     querySelections(v) {
@@ -42,8 +45,14 @@ export default {
           return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1;
         });
 
-        if (!this.items.length) {
-          this.items.push(v);
+        this.items.push(v);
+
+        if (this.seenTags && this.seenTags.length) {
+          this.seenTags
+            .filter((t) => t.indexOf(v) > -1)
+            .forEach((t) => {
+              this.items.push(t);
+            });
         }
 
         this.tags.forEach((tag) => {
@@ -76,6 +85,9 @@ export default {
     tags(val) {
       this.search = null;
       this.$emit("tagschanged", this.tags);
+    },
+    seenTags(val) {
+      this.seenTags = val;
     },
   },
 };
