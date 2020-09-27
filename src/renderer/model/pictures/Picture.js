@@ -344,6 +344,15 @@ export default class Picture {
     /**
      * @property
      * @public
+     * @type {String}
+     */
+    get isMedia() {
+        return this.extension === 'mp4' || this.extension === 'webm' || this.extension === 'gif';
+    }
+
+    /**
+     * @property
+     * @public
      * @type {Array<string>}
      */
     get metadata() {

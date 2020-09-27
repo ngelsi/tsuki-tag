@@ -1,8 +1,15 @@
 <template>
-  <v-card class="rounded-0 provider-card" :style="{'min-height': initialHeight}">
+  <v-card
+    class="rounded-0 provider-card"
+    :style="{ 'min-height': initialHeight }"
+  >
     <v-toolbar dark class="rounded-0 provider-toolbar">
       <ProviderNavigation></ProviderNavigation>
-      <TagSelector ref="tagSelector" v-on:tagschanged="tagsChanged" :seenTags="tagCollection"></TagSelector>
+      <TagSelector
+        ref="tagSelector"
+        v-on:tagschanged="tagsChanged"
+        :seenTags="tagCollection"
+      ></TagSelector>
       <Refresher></Refresher>
       <ProviderSettings
         v-on:providersChanged="providersChanged"
@@ -25,12 +32,18 @@
           ></PictureTags>
         </v-col>
         <v-col class="provider-container-pictures">
-          <PictureCollection :pictures="pictures" v-on:pictureSelected="pictureSelected"></PictureCollection>
+          <PictureCollection
+            :pictures="pictures"
+            v-on:pictureSelected="pictureSelected"
+          ></PictureCollection>
         </v-col>
       </v-row>
     </v-container>
     <Toaster ref="toaster"></Toaster>
-    <PictureModal ref="pictureModal" v-on:tagSelected="tagSelected"></PictureModal>
+    <PictureModal
+      ref="pictureModal"
+      v-on:tagSelected="tagSelected"
+    ></PictureModal>
   </v-card>
 </template>
 
@@ -243,11 +256,18 @@ export default {
               const ratingAllowed = localFilter.ratings.includes(
                 picture.rating
               );
+
               const existing = this.pictures.filter(
                 (p) => p.md5 === picture.md5
               );
 
-              if ((!existing || existing.length === 0) && ratingAllowed) {
+              const notVideo = !picture.isMedia;
+
+              if (
+                (!existing || existing.length === 0) &&
+                ratingAllowed &&
+                notVideo
+              ) {
                 this.pictures.push(picture);
               }
             });

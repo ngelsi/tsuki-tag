@@ -27,7 +27,7 @@
                 <v-icon>mdi-content-save-outline</v-icon>
               </v-btn>
             </template>
-            <span>{{tt("op.savedefault")}}</span>
+            <span>{{ tt("op.savedefault") }}</span>
           </v-tooltip>
 
           <v-menu>
@@ -45,7 +45,7 @@
                     <v-icon>mdi-content-save-move-outline</v-icon>
                   </v-btn>
                 </template>
-                <span>{{tt("op.saveselect")}}</span>
+                <span>{{ tt("op.saveselect") }}</span>
               </v-tooltip>
             </template>
             <v-list>
@@ -68,7 +68,7 @@
             <div
               class="metadata-container"
               v-if="picture && picture.md5"
-              v-bind:style="{'max-height': containerHeight + 'px'}"
+              v-bind:style="{ 'max-height': containerHeight + 'px' }"
             >
               <PictureTags
                 :pictures="pictures"
@@ -82,13 +82,22 @@
             <div
               class="metadata-container"
               v-if="picture && picture.md5"
-              v-bind:style="{'max-height': containerHeight + 'px'}"
+              v-bind:style="{ 'max-height': containerHeight + 'px' }"
             >
               <PictureMetadata
                 :picture="picture"
                 :height="metadataHeight"
                 :offset="metadataOffset"
-                :metadatas="['provider', 'id', 'createdAt', 'dimensions', 'source', 'rating', 'score', 'extension']"
+                :metadatas="[
+                  'provider',
+                  'id',
+                  'createdAt',
+                  'dimensions',
+                  'source',
+                  'rating',
+                  'score',
+                  'extension',
+                ]"
               ></PictureMetadata>
             </div>
           </v-col>
@@ -97,7 +106,10 @@
               <v-col cols="12" align-self="center" class="pr-6">
                 <div
                   class="picturemodal-container"
-                  v-bind:style="{'max-height': containerHeight + 'px', 'max-width': containerWidth + 'px'}"
+                  v-bind:style="{
+                    'max-height': containerHeight + 'px',
+                    'max-width': containerWidth + 'px',
+                  }"
                 >
                   <img
                     v-if="picture && picture.md5"
