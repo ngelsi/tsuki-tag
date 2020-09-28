@@ -70,10 +70,8 @@ import DataStore from "../services/DataStore";
 import AppSettings from "../model/AppSettings";
 import Refresher from "./parts/Refresher";
 import { t } from "../services/Localizer";
-import {
-  OnlinePictureProviderService,
-  PictureProviderService,
-} from "../services/PictureProviderService";
+import OnlinePictureProviderService from "../services/providerservices/OnlinePictureProviderService";
+import PictureProviderService from "../services/providerservices/PictureProviderService";
 import StringUtils from "../services/StringUtils";
 import { app } from "electron";
 

@@ -1,81 +1,30 @@
 import {
     SafebooruProvider
-} from "./pictureproviders/SafebooruProvider";
+} from "../pictureproviders/SafebooruProvider";
 import {
     KonachanProvider
-} from './pictureproviders/KonachanProvider';
+} from '../pictureproviders/KonachanProvider';
 import {
     DanbooruProvider
-} from './pictureproviders/DanbooruProvider';
+} from '../pictureproviders/DanbooruProvider';
+import {
+    GelbooruProvider
+} from "../pictureproviders/GelbooruProvider";
 import {
     PictureProvider
-} from "./pictureproviders/PictureProvider";
+} from "../pictureproviders/PictureProvider";
 import {
     ProviderFilter
-} from "../model/ProviderFilter";
-import Picture from "../model/pictures/Picture";
-import { GelbooruProvider } from "./pictureproviders/GelbooruProvider";
-import ProviderResult from "../model/ProviderResult";
-import ProviderServiceResult from "../model/ProviderServiceResult";
-import { t } from "./Localizer";
-import StringUtils from './StringUtils';
+} from "../../model/ProviderFilter";
 
-/**
- * @class
- * @classdesc Represents a collection of picture providers which will individually be called by the
- * service when new pictures are requested by the caller.
- * @abstract
- */
-export class PictureProviderService {
+import Picture from "../../model/pictures/Picture";
+import ProviderResult from "../../model/ProviderResult";
+import PictureProviderService from './PictureProviderService';
+import ProviderServiceResult from "../../model/ProviderServiceResult";
+import { t } from "../Localizer";
+import StringUtils from '../StringUtils';
 
-    constructor() {
-
-        /**
-         * @member
-         * @protected
-         * @abstract
-         * @type {Array<PictureProvider>}
-         */
-        this._providers = [];
-
-        /**
-         * @member
-         * @protected
-         * @abstract
-         * @type {String}
-         */
-        this._name = "";
-    }
-
-    /**
-     * @property
-     * @public
-     * @abstract
-     * @type {Array<String>}
-     */
-    get providerNames() { }
-
-    /**
-     * @property
-     * @public
-     * @type {String}
-     */
-    get name() {
-        return this._name;
-    }
-
-    /**
-     * Retrieves pictures using the providers specified by the filter object.     
-     * @function
-     * @abstract
-     * @param {ProviderFilter} filter The filter object to be passed to the specified picture providers.
-     * @returns {Promise<ProviderServiceResult>}
-     */
-    get(filter) { }
-
-}
-
-export class OnlinePictureProviderService extends PictureProviderService {
+export default class OnlinePictureProviderService extends PictureProviderService {
 
     constructor() {
         super();
