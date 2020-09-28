@@ -10,6 +10,8 @@ import Jimp from 'jimp';
 import base64a from 'base64-arraybuffer';
 import exif, { piexif } from 'piexifjs';
 import { exit } from 'process';
+import DataStore from './DataStore';
+import FavoritePictures from '../model/FavoritePictures';
 
 export default class PictureWorker {
 
@@ -162,6 +164,65 @@ export default class PictureWorker {
                     });
                 }
             });
+        });
+    }
+
+    /**
+     * @param {Picture} picture 
+     * @returns {Promise}
+     */
+    favorite(picture) {
+        return new Promise((resolve, reject) => {
+            this.getFavorite(picture)
+                .then(favorite => {
+                    DataStore.defaults[FavoritePictures.name] = FavoritePictures.default;
+                    var dataStore = new DataStore();
+                    dataStore.get(FavoritePictures.name)
+                        .then((/** @type {FavoritePictures} */ favoritePictures) => {
+
+                            if (favorite) {
+                                picture._favorite = false;
+                                favoritePictures.pictures = favoritePictures.pictures.filter(p => p._md5 !== picture._md5);
+                            }
+                            else {
+                                picture._favorite = true;
+                                favoritePictures.pictures.push(picture);
+                            }
+
+                            dataStore.set(FavoritePictures.name, favoritePictures)
+                                .then(() => {
+                                    resolve();
+                                })
+                                .catch(err => {
+                                    reject(err);
+                                });
+                        })
+                        .catch(err => {
+                            reject(err);
+                        });
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    }
+
+    /**     
+     * @param {Picture} picture 
+     * @returns {Promise<Boolean>}
+     */
+    getFavorite(picture) {
+        return new Promise((resolve, reject) => {
+            DataStore.defaults[FavoritePictures.name] = FavoritePictures.default;
+            var dataStore = new DataStore();
+            dataStore.get(FavoritePictures.name)
+                .then((/** @type {FavoritePictures} */ favoritePictures) => {
+                    const exists = favoritePictures.pictures && favoritePictures.pictures.length && favoritePictures.pictures.filter(p => p._md5 === picture._md5).length > 0;
+                    resolve(exists);
+                })
+                .catch(err => {
+                    reject(err);
+                });
         });
     }
 

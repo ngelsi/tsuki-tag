@@ -22,6 +22,7 @@ const en = {
     "search.previous": "Previous page",
 
     "nav.onlineproviders": "Browse online",
+    "nav.favorites": "Browse favorites",
     "nav.settings": "Settings",
     "nav.nav": "Navigation",
 
@@ -67,6 +68,11 @@ const en = {
 
     "op.savedefault": "Save to default workspace",
     "op.saveselect": "Save to workspace...",
+    "op.favorite": "Favorite",
+    "op.unfavorite": "Unfavorite",
+    "op.favorited": "Added to favorites",
+    "op.unfavorited": "Removed from favorites",
+    "op.favoriteerror": "Could not favorite/unfavorite picture.",
     "op.nodefaultworkspace": "No default workspace has been configured yet.",
     "op.picturesaved": "Saved to workspace '{0}' as '{1}'",
     "op.picturesaveerror": "Could not save picture. Check writing rights and access to workspace '{0}'.",

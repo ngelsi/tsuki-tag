@@ -1,6 +1,11 @@
 <template>
   <div class="text-center">
-    <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
+    <v-menu
+      v-model="menu"
+      :close-on-content-click="false"
+      :nudge-width="200"
+      offset-x
+    >
       <template v-slot:activator="{ on, attrs }">
         <v-tooltip bottom>
           <template v-slot:activator="{ on: tooltip }">
@@ -8,39 +13,57 @@
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
-          <span>{{tt("search.providersettings")}}</span>
+          <span>{{ tt("search.providersettings") }}</span>
         </v-tooltip>
       </template>
 
       <v-card>
-        <v-card-subtitle>{{tt("search.providers")}}</v-card-subtitle>
+        <v-card-subtitle
+          v-if="providerSelections && providerSelections.length"
+          >{{ tt("search.providers") }}</v-card-subtitle
+        >
 
-        <v-divider></v-divider>
+        <v-divider
+          v-if="providerSelections && providerSelections.length"
+        ></v-divider>
 
-        <v-list>
-          <v-list-item v-for="provider in providerSelections" :key="provider.name">
+        <v-list v-if="providerSelections && providerSelections.length">
+          <v-list-item
+            v-for="provider in providerSelections"
+            :key="provider.name"
+          >
             <v-list-item-action>
-              <v-switch v-on:change="providersChanged" v-model="provider.selected" color="purple"></v-switch>
+              <v-switch
+                v-on:change="providersChanged"
+                v-model="provider.selected"
+                color="purple"
+              ></v-switch>
             </v-list-item-action>
-            <v-list-item-title>{{tt(provider.name)}}</v-list-item-title>
+            <v-list-item-title>{{ tt(provider.name) }}</v-list-item-title>
           </v-list-item>
         </v-list>
 
-        <v-card-subtitle>{{tt("search.ratings")}}</v-card-subtitle>
+        <v-card-subtitle>{{ tt("search.ratings") }}</v-card-subtitle>
         <v-divider></v-divider>
 
         <v-list>
           <v-list-item v-for="rating in ratingSelections" :key="rating.name">
             <v-list-item-action>
-              <v-switch v-on:change="ratingsChanged" v-model="rating.selected" color="purple"></v-switch>
+              <v-switch
+                v-on:change="ratingsChanged"
+                v-model="rating.selected"
+                color="purple"
+              ></v-switch>
             </v-list-item-action>
-            <v-list-item-title>{{tt(rating.name)}}</v-list-item-title>
+            <v-list-item-title>{{ tt(rating.name) }}</v-list-item-title>
           </v-list-item>
         </v-list>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="menu = false">{{tt("misc.close")}}</v-btn>
+          <v-btn color="primary" text @click="menu = false">{{
+            tt("misc.close")
+          }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-menu>

@@ -8,17 +8,22 @@
               <v-icon>mdi-swap-horizontal-bold</v-icon>
             </v-btn>
           </template>
-          <span>{{tt("nav.nav")}}</span>
+          <span>{{ tt("nav.nav") }}</span>
         </v-tooltip>
       </template>
       <v-list>
         <v-list-item-group>
-          <v-list-item @click="route('/')">
-            <v-list-item-title>{{tt("nav.onlineproviders")}}</v-list-item-title>
+          <v-list-item @click="route('/online')">
+            <v-list-item-title>{{
+              tt("nav.onlineproviders")
+            }}</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="route('/favorites')">
+            <v-list-item-title>{{ tt("nav.favorites") }}</v-list-item-title>
           </v-list-item>
           <v-divider></v-divider>
           <v-list-item @click="route('appsettings')">
-            <v-list-item-title>{{tt("nav.settings")}}</v-list-item-title>
+            <v-list-item-title>{{ tt("nav.settings") }}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>

@@ -12,6 +12,9 @@ let Defaults = {};
 let Migrations = {
     'appsettings': [
         new AppSettingsMigration2Pagination()
+    ],
+    'favorites': [
+
     ]
 };
 

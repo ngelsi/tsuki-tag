@@ -51,6 +51,7 @@
     <PictureModal
       ref="pictureModal"
       v-on:tagSelected="tagSelected"
+      v-on:favoriteChanged="favoriteChanged"
     ></PictureModal>
   </v-card>
 </template>
@@ -71,12 +72,17 @@ import AppSettings from "../model/AppSettings";
 import Refresher from "./parts/Refresher";
 import { t } from "../services/Localizer";
 import OnlinePictureProviderService from "../services/providerservices/OnlinePictureProviderService";
+import FavoritePictureProviderService from "../services/providerservices/FavoritePictureProviderService";
 import PictureProviderService from "../services/providerservices/PictureProviderService";
 import StringUtils from "../services/StringUtils";
 import { app } from "electron";
+import FavoritePictures from "../model/FavoritePictures";
 
 const dataStore = new DataStore();
-const providers = [new OnlinePictureProviderService()];
+const providers = [
+  new OnlinePictureProviderService(),
+  new FavoritePictureProviderService(),
+];
 
 export default {
   name: "picture-provider",
@@ -184,6 +190,14 @@ export default {
         }
       } else if (event.action === "unique") {
         this.$refs.tagSelector.uniqueTag(event.tag);
+      }
+    },
+
+    favoriteChanged() {
+      if (this.providerService.name === "favorites") {
+        this.providerCache = [];
+        this.pictures = [];
+        this.getPictures();
       }
     },
 
@@ -425,6 +439,7 @@ export default {
   },
   mounted() {
     this.subscribeToScroll();
+    this.scrollTop();
   },
   watch: {
     nextBatch(val) {

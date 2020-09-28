@@ -148,6 +148,13 @@ export default class Picture {
          * @type {String}
          */
         this._extension = null;
+
+        /**
+         * @member
+         * @protected
+         * @type {Boolean}
+         */
+        this._favorite = false;
     }
 
     /**
@@ -348,6 +355,22 @@ export default class Picture {
      */
     get isMedia() {
         return this.extension === 'mp4' || this.extension === 'webm' || this.extension === 'gif';
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {Boolean}
+     */
+    get favorite() {
+        return this._favorite;
+    }
+
+    /**
+     * @param {Boolean} val
+     */
+    set favorite(val) {
+        this._favorite = val;
     }
 
     /**

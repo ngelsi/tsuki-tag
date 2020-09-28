@@ -18,6 +18,28 @@
               <v-btn
                 :disabled="working"
                 :loading="saving"
+                @click="favoritePicture(null)"
+                dark
+                :color="picture && picture.favorite ? 'primary' : 'white'"
+                v-bind="attrs"
+                v-on="on"
+                icon
+              >
+                <v-icon>mdi-star</v-icon>
+              </v-btn>
+            </template>
+            <span>{{
+              picture && picture.favorite
+                ? tt("op.unfavorite")
+                : tt("op.favorite")
+            }}</span>
+          </v-tooltip>
+
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                :disabled="working"
+                :loading="saving"
                 @click="savePicture(null)"
                 dark
                 v-bind="attrs"
@@ -219,6 +241,7 @@ export default {
       this.pictures = newPictures;
 
       this.calculateDimensions();
+      this.getFavorite();
 
       this.showing = true;
     },
@@ -254,6 +277,12 @@ export default {
         this.metadataOffset = this.tagHeight + metadataHeight + 15;
       }
     },
+    getFavorite() {
+      const worker = new PictureWorker();
+      worker.getFavorite(this.picture).then((favorite) => {
+        this.picture.favorite = favorite;
+      });
+    },
     subscribeToResize() {
       window.onresize = (event) => {
         this.calculateDimensions();
@@ -266,6 +295,24 @@ export default {
         this.imageData = worker.convertToSrc(picture.extension, buffer);
       });
     },
+
+    favoritePicture() {
+      const worker = new PictureWorker();
+      worker
+        .favorite(this.picture)
+        .then(() => {
+          // this.$refs.toaster.info(
+          //   this.picture.favorite ? t("op.favorited") : t("op.unfavorited")
+          // );
+
+          this.$emit("favoriteChanged");
+        })
+        .catch((err) => {
+          console.log("ERR", err);
+          this.$refs.toaster.info(t("op.favoriteerror"));
+        });
+    },
+
     /** @param {Workspace} workspace */
     savePicture(workspace) {
       if (!workspace) {

@@ -30,6 +30,13 @@ export default class AppSettings {
          * @type {Array<String>}
          */
         this.ratings = [];
+
+        /**
+         * @member
+         * @public
+         * @type {Number}
+         */
+        this.version = 2;
     }
 
     /**

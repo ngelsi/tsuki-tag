@@ -10,6 +10,22 @@ export default new Router({
     component: require('@/components/Home').default,
     props: {
       provider: 'online'
+    },
+  },
+  {
+    path: '/online',
+    name: 'online',
+    component: require('@/components/Online').default,
+    props: {
+      provider: 'online'
+    }
+  },
+  {
+    path: '/favorites',
+    name: 'favorites',
+    component: require('@/components/Favorites').default,
+    props: {
+      provider: 'favorites'
     }
   },
   {
