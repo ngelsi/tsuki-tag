@@ -1,15 +1,19 @@
 <template>
-  <OnlineProvider></OnlineProvider>
+  <PictureProvider :providerKey="provider"></PictureProvider>
 </template>
 
 <script>
-import OnlineProvider from "./OnlineProvider";
+import PictureProvider from "./PictureProvider";
 
 export default {
   name: "home",
   data: () => ({}),
+  props: {
+    /** @type {String} */
+    provider: String,
+  },
   components: {
-    OnlineProvider,
+    PictureProvider,
   },
   methods: {},
   watch: {},

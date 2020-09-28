@@ -10,6 +10,14 @@
         v-on:tagschanged="tagsChanged"
         :seenTags="tagCollection"
       ></TagSelector>
+      <ProviderPaginator
+        v-if="!settings.endlessScrolling"
+        :filter="filter"
+        :searchEnd="currentSearchFinished"
+        :loading="loading"
+        v-on:nextPage="paginatorNextPage"
+        v-on:previousPage="paginatorPreviousPage"
+      ></ProviderPaginator>
       <Refresher></Refresher>
       <ProviderSettings
         v-on:providersChanged="providersChanged"
@@ -56,29 +64,37 @@ import PictureCollection from "./parts/PictureCollection";
 import PictureModal from "./modals/PictureModal";
 import PictureTags from "./parts/PictureTags";
 import ProviderFilter from "../model/ProviderFilter";
+import ProviderPaginator from "./parts/ProviderPaginator";
 import Picture from "../model/pictures/Picture";
 import DataStore from "../services/DataStore";
 import AppSettings from "../model/AppSettings";
 import Refresher from "./parts/Refresher";
 import { t } from "../services/Localizer";
-import { OnlinePictureProviderService } from "../services/PictureProviderService";
+import {
+  OnlinePictureProviderService,
+  PictureProviderService,
+} from "../services/PictureProviderService";
 import StringUtils from "../services/StringUtils";
 import { app } from "electron";
 
-const providerService = new OnlinePictureProviderService();
 const dataStore = new DataStore();
+const providers = [new OnlinePictureProviderService()];
 
 export default {
-  name: "online-provider",
+  name: "picture-provider",
   data: () => ({
     /** @type {Boolean} */
     loading: false,
     /** @type {ProviderFilter} */
     filter: new ProviderFilter(),
+    /** @type {AppSettings} */
+    settings: {},
     /** @type {Array<Picture>} */
     pictures: [],
     /** @type {Boolean} */
     nextBatch: false,
+    /** @type {Boolean} */
+    previousBatch: false,
     /** @type {Boolean} */
     currentSearchFinished: false,
     /** @type {Picture} */
@@ -87,7 +103,15 @@ export default {
     currentSearchFinishedProviders: [],
     /** @type {Array<string>} */
     tagCollection: [],
+    /** @type {{page: number, pictures: Array<Picture>}[]} */
+    providerCache: [],
+    /** @type {PictureProviderService} */
+    providerService: null,
   }),
+  props: {
+    /** @type {String} */
+    providerKey: String,
+  },
   components: {
     ProviderNavigation,
     TagSelector,
@@ -97,23 +121,43 @@ export default {
     PictureModal,
     PictureTags,
     Refresher,
+    ProviderPaginator,
   },
   methods: {
+    scrollTop() {
+      let container = window;
+      container.scrollTo(0, 0);
+    },
+
     /**
      *  @param {Boolean} load
      */
     resetState(load) {
       this.filter.page = 0;
       this.pictures = [];
+      this.providerCache = [];
       this.currentSearchFinished = false;
       this.currentSearchFinishedProviders = [];
-
-      let container = window;
-      container.scrollTo(0, 0);
+      this.scrollTop();
 
       if (load) {
         this.getPictures();
       }
+    },
+
+    paginatorNextPage() {
+      this.pictures = [];
+      this.scrollTop();
+
+      this.nextBatch = true;
+    },
+
+    paginatorPreviousPage() {
+      this.pictures = [];
+      this.currentSearchFinished = false;
+      this.scrollTop();
+
+      this.previousBatch = true;
     },
 
     /**
@@ -219,6 +263,27 @@ export default {
         this.nextBatch = false;
       }
 
+      if (this.previousBatch) {
+        this.filter.page -= 1;
+        this.previousBatch = false;
+      }
+
+      const caches = this.providerCache.filter(
+        (c) => c.page === this.filter.page
+      );
+
+      if (caches && caches.length) {
+        const cache = caches[0];
+        console.log("cached result page", this.filter.page);
+        this.pictures = [...cache.pictures];
+
+        setTimeout(() => {
+          this.loading = false;
+        }, 500);
+
+        return;
+      }
+
       const localFilter = ProviderFilter.fromFilter(this.filter);
       if (
         this.currentSearchFinishedProviders &&
@@ -231,7 +296,7 @@ export default {
 
       console.log("filter", localFilter);
 
-      providerService
+      this.providerService
         .get(localFilter)
         .then((serviceResult) => {
           if (
@@ -272,6 +337,11 @@ export default {
               }
             });
 
+            this.providerCache.push({
+              page: this.filter.page,
+              pictures: [...this.pictures],
+            });
+
             serviceResult.finishedProviders.forEach((provider) => {
               this.currentSearchFinishedProviders.push(provider);
 
@@ -306,7 +376,9 @@ export default {
           container.scrollTop + container.clientHeight + 1 >=
           container.scrollHeight;
 
-        this.nextBatch = bottomOfWindow;
+        if (this.settings && this.settings.endlessScrolling) {
+          this.nextBatch = bottomOfWindow;
+        }
       };
     },
     addTag(tag) {
@@ -317,14 +389,14 @@ export default {
     },
   },
   computed: {
-    availableProviders: () => {
-      return providerService.providerNames;
+    availableProviders: function () {
+      return this.providerService.providerNames;
     },
     selectedProviders: function () {
       return this.filter.providers;
     },
     availableRatings: () => {
-      return AppSettings.default.ratings;
+      return ["s", "q", "e"];
     },
     selectedRatings: function () {
       return this.filter.ratings;
@@ -336,9 +408,14 @@ export default {
   created() {
     DataStore.defaults[AppSettings.name] = AppSettings.default;
 
+    this.providerService = providers.filter(
+      (p) => p.name === this.$props.providerKey
+    )[0];
+
     dataStore
       .get(AppSettings.name)
       .then((/** @type {AppSettings} */ appsettings) => {
+        this.settings = appsettings;
         this.filter.providers = appsettings.onlineProviders;
         this.filter.ratings = appsettings.ratings;
         this.getPictures();
@@ -353,6 +430,11 @@ export default {
   },
   watch: {
     nextBatch(val) {
+      if (val && !this.loading) {
+        this.getPictures();
+      }
+    },
+    previousBatch(val) {
       if (val && !this.loading) {
         this.getPictures();
       }

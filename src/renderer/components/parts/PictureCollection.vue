@@ -1,6 +1,10 @@
 <template>
   <v-layout row wrap class="ml-5 mr-5 pictures">
-    <div v-for="picture in pictures" :key="picture.md5" class="ma-5 float-left picture-container">
+    <div
+      v-for="picture in pictures"
+      :key="picture.md5"
+      class="ma-5 float-left picture-container"
+    >
       <v-tooltip absolute fixed bottom content-class="picture-metadata-tooltip">
         <template v-slot:activator="{ on, attrs }">
           <img
@@ -16,22 +20,31 @@
         <div class="picture-tooltip-container">
           <div class="tooltip-tags">
             <v-list dense>
-              <v-subheader>{{tt("picture.tags")}}</v-subheader>
+              <v-subheader>{{ tt("picture.tags") }}</v-subheader>
               <v-list-item v-for="(tag, index) in picture.tags" :key="index">
-                <span class="purple--text">{{tag}}</span>
+                <span class="purple--text">{{ tag }}</span>
               </v-list-item>
             </v-list>
           </div>
           <div class="tooltip-metadata">
             <v-list dense>
-              <v-subheader>{{tt("picture.metadatas")}}</v-subheader>
+              <v-subheader>{{ tt("picture.metadatas") }}</v-subheader>
               <v-list-item
-                v-for="(metadata, index) in ['provider', 'id', 'dimensions', 'rating', 'score', 'extension']"
+                v-for="(metadata, index) in [
+                  'provider',
+                  'id',
+                  'dimensions',
+                  'rating',
+                  'score',
+                  'extension',
+                ]"
                 :key="index"
               >
-                <span class="purple--text">{{tt('picture.' + metadata)}}:</span>
+                <span class="purple--text"
+                  >{{ tt("picture." + metadata) }}:</span
+                >
                 &nbsp;
-                <span>{{tt(picture[metadata])}}</span>
+                <span>{{ tt(picture[metadata]) }}</span>
               </v-list-item>
             </v-list>
           </div>
@@ -69,6 +82,7 @@ export default {
 
 <style>
 .pictures {
+  min-height: 90vh;
 }
 
 .picture-container {

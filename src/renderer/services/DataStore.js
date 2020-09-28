@@ -5,12 +5,13 @@ import DataStoreMigration from '../model/migrations/DataStoreMigration';
 import {
     remote
 } from 'electron';
+import AppSettingsMigration2Pagination from '../model/migrations/AppSettingsMigration2Pagination';
 
 let DataCache = {};
 let Defaults = {};
 let Migrations = {
     'appsettings': [
-
+        new AppSettingsMigration2Pagination()
     ]
 };
 
@@ -62,6 +63,8 @@ export default class DataStore {
         migrations.forEach(/** @type {DataStoreMigration} */ migration => {
             if (migration.version > data.version) {
                 migration.apply(data);
+
+                data.version = migration.version;
             }
         });
     }

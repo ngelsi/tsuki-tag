@@ -7,7 +7,10 @@ export default new Router({
   routes: [{
     path: '/',
     name: 'home',
-    component: require('@/components/Home').default
+    component: require('@/components/Home').default,
+    props: {
+      provider: 'online'
+    }
   },
   {
     path: '/AppSettings',

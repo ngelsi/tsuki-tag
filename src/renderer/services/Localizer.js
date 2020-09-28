@@ -18,6 +18,8 @@ const en = {
     "search.httperror": "Communication failed with provider '{provider}'.",
     "search.tags": "Search tags",
     "search.error": "Unknown errors happened during picture retrieval.",
+    "search.next": "Next page",
+    "search.previous": "Previous page",
 
     "nav.onlineproviders": "Browse online",
     "nav.settings": "Settings",
@@ -41,6 +43,8 @@ const en = {
     "settings.saved": "Settings saved.",
     "settings.saveerror": "Could not save settings. Check the data and try again.",
     "settings.validationerror": "Some settings are incorrect. Check displayed errors.",
+    "settings.general": "General",
+    "settings.endlessscrolling": "Use endless scrolling instead of pagination",
 
     "safebooru": "Safebooru",
     "konachan": "Konachan",

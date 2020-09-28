@@ -26,7 +26,7 @@ import StringUtils from './StringUtils';
  * service when new pictures are requested by the caller.
  * @abstract
  */
-class PictureProviderService {
+export class PictureProviderService {
 
     constructor() {
 
@@ -37,6 +37,14 @@ class PictureProviderService {
          * @type {Array<PictureProvider>}
          */
         this._providers = [];
+
+        /**
+         * @member
+         * @protected
+         * @abstract
+         * @type {String}
+         */
+        this._name = "";
     }
 
     /**
@@ -46,6 +54,15 @@ class PictureProviderService {
      * @type {Array<String>}
      */
     get providerNames() { }
+
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
+    get name() {
+        return this._name;
+    }
 
     /**
      * Retrieves pictures using the providers specified by the filter object.     
@@ -75,6 +92,14 @@ export class OnlinePictureProviderService extends PictureProviderService {
             new DanbooruProvider(),
             new GelbooruProvider()
         ];
+
+        /**
+         * @member
+         * @protected
+         * @override
+         * @type {String}
+         */
+        this._name = 'online';
     }
 
     /**

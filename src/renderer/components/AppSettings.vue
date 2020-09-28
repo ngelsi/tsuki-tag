@@ -3,36 +3,79 @@
     <v-form ref="form" v-model="valid">
       <v-toolbar dark class="rounded-0 settings-toolbar">
         <ProviderNavigation></ProviderNavigation>&nbsp;&nbsp;
-        <v-toolbar-title>{{tt("nav.settings")}}</v-toolbar-title>
+        <v-toolbar-title>{{ tt("nav.settings") }}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn text @click="goBack">{{tt("misc.cancel")}}</v-btn>
-        <v-btn text color="primary" @click="submit">{{tt("misc.save")}}</v-btn>
+        <v-btn text @click="goBack">{{ tt("misc.cancel") }}</v-btn>
+        <v-btn text color="primary" @click="submit">{{
+          tt("misc.save")
+        }}</v-btn>
         <template v-slot:extension>
           <v-tabs v-model="tab" dark class="pr-5 pl-5">
-            <v-tab href="#workspaces">{{tt("settings.workspaces")}}</v-tab>
+            <v-tab href="#general">{{ tt("settings.general") }}</v-tab>
+            <v-tab href="#workspaces">{{ tt("settings.workspaces") }}</v-tab>
           </v-tabs>
         </template>
       </v-toolbar>
       <v-container fluid class="settings-container">
         <v-tabs-items v-model="tab">
-          <v-tab-item value="workspaces">
+          <v-tab-item
+            :transition="false"
+            :reverse-transition="false"
+            value="general"
+          >
+            <v-row>
+              <v-col cols="12" class="pr-5 pl-5">
+                <div class="float-left text-h6">
+                  {{ tt("settings.general") }}
+                </div>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6" class="pt-0 pr-5 pl-5 pb-0">
+                <v-switch
+                  v-model="settings.endlessScrolling"
+                  :label="tt('settings.endlessscrolling')"
+                ></v-switch>
+              </v-col>
+            </v-row>
+          </v-tab-item>
+          <v-tab-item
+            :transition="false"
+            :reverse-transition="false"
+            value="workspaces"
+          >
             <v-row>
               <v-col cols="12" class="pr-5 pl-5">
                 <div
                   class="float-left text-h6"
-                  v-if="!settings.workspaces || settings.workspaces.length === 0"
-                >{{tt("settings.noworkspaces")}}</div>
+                  v-if="
+                    !settings.workspaces || settings.workspaces.length === 0
+                  "
+                >
+                  {{ tt("settings.noworkspaces") }}
+                </div>
                 <div
                   class="float-left text-h6"
                   v-if="settings.workspaces && settings.workspaces.length"
-                >{{tt("settings.workspaces")}} ({{settings.workspaces.length}})</div>
+                >
+                  {{ tt("settings.workspaces") }} ({{
+                    settings.workspaces.length
+                  }})
+                </div>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" class="float-right" @click="addWorkspace">
+                <v-btn
+                  color="primary"
+                  class="float-right"
+                  @click="addWorkspace"
+                >
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
               </v-col>
             </v-row>
-            <v-row v-for="workspace in settings.workspaces" :key="workspace.name">
+            <v-row
+              v-for="workspace in settings.workspaces"
+              :key="workspace.name"
+            >
               <v-col cols="12" md="4" class="pb-0 pl-5 pr-5">
                 <v-text-field
                   v-model="workspace.name"
@@ -48,7 +91,8 @@
                   readonly
                   required
                   :label="tt('settings.workspacepath')"
-                ></v-text-field>
+                >
+                </v-text-field>
               </v-col>
               <v-col cols="12" md="4" class="pb-5 pl-5 pr-5">
                 <v-text-field
@@ -59,9 +103,9 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="8" class="pb-5 pl-5 pr-5">
-                <div
-                  class="text-subtitle-2 font-italic text--secondary"
-                >{{tt("settings.workspacenamingconventionhelp")}}</div>
+                <div class="text-subtitle-2 font-italic text--secondary">
+                  {{ tt("settings.workspacenamingconventionhelp") }}
+                </div>
               </v-col>
               <v-col cols="6" class="pt-0 pr-5 pl-5 pb-0">
                 <v-switch
@@ -80,7 +124,8 @@
                 <v-switch
                   v-model="workspace.downloadSourcePictures"
                   :label="tt('settings.workspacesourcepictures')"
-                ></v-switch>
+                >
+                </v-switch>
               </v-col>
               <v-col cols="6" class="pt-0 pr-5 pl-5 pb-0">
                 <v-switch
@@ -92,7 +137,8 @@
                 <v-switch
                   v-model="workspace.includeMetadata"
                   :label="tt('settings.workspaceincludemetadata')"
-                ></v-switch>
+                >
+                </v-switch>
               </v-col>
               <v-col cols="6" class="pt-0 pr-5 pl-5 pb-0">
                 <v-switch
@@ -108,7 +154,7 @@
                   @click="removeWorkspace(workspace)"
                 >
                   <v-icon>mdi-close</v-icon>
-                  {{tt("misc.remove")}}
+                  {{ tt("misc.remove") }}
                 </v-btn>
               </v-col>
               <v-col cols="12">
@@ -170,7 +216,9 @@ export default {
       const mainWindow = remote.getCurrentWindow();
       const filePath = dialog.showOpenDialog(
         mainWindow,
-        { properties: ["openDirectory"] },
+        {
+          properties: ["openDirectory"],
+        },
         (/** @type {Array<String>*/ filePaths) => {
           if (filePaths && filePaths.length) {
             const selectedPath = filePaths[0];

@@ -2,6 +2,14 @@ import Workspace from './Workspace';
 
 export default class AppSettings {
     constructor() {
+
+        /**
+         * @member
+         * @public
+         * @type {Boolean}
+         */
+        this.endlessScrolling = false;
+
         /**
          * @member
          * @public
@@ -36,7 +44,8 @@ export default class AppSettings {
      */
     static get default() {
         return {
-            version: 1,
+            version: 2,
+            endlessScrolling: false,
             onlineProviders: [
                 'safebooru',
                 'konachan',
@@ -47,9 +56,7 @@ export default class AppSettings {
 
             ],
             ratings: [
-                's',
-                'q',
-                'e'
+                's'
             ]
         };
     }
