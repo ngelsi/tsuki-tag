@@ -29,7 +29,10 @@ function createWindow() {
     useContentSize: true,
     width: 1000,
     titleBarStyle: 'hidden',
-    frame: false
+    frame: false,
+    webPreferences: {
+      webSecurity: false
+    }
   })
 
   mainWindow.loadURL(winURL)

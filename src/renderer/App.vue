@@ -7,7 +7,9 @@
           <span>Tsuki-tag</span>
           <v-spacer></v-spacer>
           <v-icon @click="minimize" class="op-icon">mdi-minus</v-icon>
-          <v-icon @click="maximize" class="op-icon">mdi-checkbox-blank-outline</v-icon>
+          <v-icon @click="maximize" class="op-icon"
+            >mdi-checkbox-blank-outline</v-icon
+          >
           <v-icon @click="close" class="op-icon">mdi-close</v-icon>
         </v-system-bar>
         <v-main>
@@ -67,6 +69,10 @@ html {
 
 .op-bar .op-icon {
   -webkit-app-region: no-drag;
+}
+
+.v-btn__content i {
+  user-select: all !important;
 }
 
 ::-webkit-scrollbar {
