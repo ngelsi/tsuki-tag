@@ -51,6 +51,14 @@
         </div>
       </v-tooltip>
     </div>
+    <div
+      v-if="loading"
+      class="pa-5 float-left loading-container"
+      v-bind:class="{ center: !pictures.length, continuos: pictures.length }"
+    >
+      <v-progress-circular color="purple" :size="100" indeterminate>
+      </v-progress-circular>
+    </div>
   </v-layout>
 </template>
 
@@ -64,6 +72,8 @@ export default {
   props: {
     /** @type {Array<Picture>} */
     pictures: Array,
+    /** @type {Boolean} */
+    loading: Boolean,
   },
   components: {},
   methods: {
@@ -83,6 +93,18 @@ export default {
 <style>
 .pictures {
   min-height: 90vh;
+}
+
+.loading-container.continuos {
+  width: 150px;
+  height: 150px;
+}
+
+.loading-container.center {
+  width: 30%;
+  height: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .picture-container {
