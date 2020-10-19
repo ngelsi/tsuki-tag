@@ -13,9 +13,23 @@ export default class AppSettings {
         /**
          * @member
          * @public
+         * @type {Boolean}
+         */
+        this.processNonexistingMetadata = false;
+
+        /**
+         * @member
+         * @public
          * @type {Array<String>}
          */
         this.onlineProviders = [];
+
+        /**
+         * @member
+         * @public
+         * @type {Array<String>}
+         */
+        this.workspaceProviders = [];
 
         /**
          * @member
@@ -36,7 +50,7 @@ export default class AppSettings {
          * @public
          * @type {Number}
          */
-        this.version = 2;
+        this.version = 4;
     }
 
     /**
@@ -51,13 +65,17 @@ export default class AppSettings {
      */
     static get default() {
         return {
-            version: 2,
+            version: 4,
             endlessScrolling: false,
+            processNonexistingMetadata: false,
             onlineProviders: [
                 'safebooru',
                 'konachan',
                 'danbooru',
                 'gelbooru'
+            ],
+            workspaceProviders: [
+
             ],
             workspaces: [
 

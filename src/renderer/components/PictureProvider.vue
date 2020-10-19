@@ -42,6 +42,7 @@
         <v-col class="provider-container-pictures">
           <PictureCollection
             :pictures="pictures"
+            :loading="loading"
             v-on:pictureSelected="pictureSelected"
           ></PictureCollection>
         </v-col>
@@ -73,6 +74,7 @@ import Refresher from "./parts/Refresher";
 import { t } from "../services/Localizer";
 import OnlinePictureProviderService from "../services/providerservices/OnlinePictureProviderService";
 import FavoritePictureProviderService from "../services/providerservices/FavoritePictureProviderService";
+import WorkspacePictureProviderService from "../services/providerservices/WorkspacePictureProviderService";
 import PictureProviderService from "../services/providerservices/PictureProviderService";
 import StringUtils from "../services/StringUtils";
 import { app } from "electron";
@@ -82,6 +84,7 @@ const dataStore = new DataStore();
 const providers = [
   new OnlinePictureProviderService(),
   new FavoritePictureProviderService(),
+  new WorkspacePictureProviderService(),
 ];
 
 export default {
@@ -222,7 +225,12 @@ export default {
       dataStore
         .get(AppSettings.name)
         .then((/** @type {AppSettings} */ appsettings) => {
-          appsettings.onlineProviders = event;
+          if (this.providerService.name === "online") {
+            appsettings.onlineProviders = event;
+          } else {
+            appsettings.workspaceProviders = event;
+          }
+
           dataStore
             .set(AppSettings.name, appsettings)
             .then(() => {
@@ -291,7 +299,7 @@ export default {
 
         setTimeout(() => {
           this.loading = false;
-        }, 500);
+        }, 100);
 
         return;
       }
@@ -330,9 +338,9 @@ export default {
               p1.md5.localeCompare(p2.md5)
             );
             serviceResult.pictures.forEach((picture) => {
-              const ratingAllowed = localFilter.ratings.includes(
-                picture.rating
-              );
+              const ratingAllowed = picture.rating
+                ? localFilter.ratings.includes(picture.rating)
+                : true;
 
               const existing = this.pictures.filter(
                 (p) => p.md5 === picture.md5
@@ -371,7 +379,7 @@ export default {
 
           setTimeout(() => {
             this.loading = false;
-          }, 500);
+          }, 100);
         })
         .catch((err) => {
           console.log("ERR", err);
@@ -428,7 +436,10 @@ export default {
       .get(AppSettings.name)
       .then((/** @type {AppSettings} */ appsettings) => {
         this.settings = appsettings;
-        this.filter.providers = appsettings.onlineProviders;
+        this.filter.providers =
+          this.providerService.name === "online"
+            ? appsettings.onlineProviders
+            : appsettings.workspaceProviders;
         this.filter.ratings = appsettings.ratings;
         this.getPictures();
       })

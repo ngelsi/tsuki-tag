@@ -29,6 +29,14 @@ export default new Router({
     }
   },
   {
+    path: '/workspaces',
+    name: 'workspaces',
+    component: require('@/components/Workspaces').default,
+    props: {
+      provider: 'workspaces'
+    }
+  },
+  {
     path: '/AppSettings',
     name: 'appsettings',
     component: require('@/components/AppSettings').default

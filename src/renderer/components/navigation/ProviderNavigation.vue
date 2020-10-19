@@ -21,6 +21,9 @@
           <v-list-item @click="route('/favorites')">
             <v-list-item-title>{{ tt("nav.favorites") }}</v-list-item-title>
           </v-list-item>
+          <v-list-item @click="route('/workspaces')">
+            <v-list-item-title>{{ tt("nav.workspaces") }}</v-list-item-title>
+          </v-list-item>
           <v-divider></v-divider>
           <v-list-item @click="route('appsettings')">
             <v-list-item-title>{{ tt("nav.settings") }}</v-list-item-title>

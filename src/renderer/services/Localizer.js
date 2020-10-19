@@ -13,7 +13,7 @@ const en = {
     "search.providersettings": "Provider settings",
     "search.ratings": "Ratings",
     "search.empty": "No more results.",
-    "search.providerempty": "No more results from provider '{provider}'.",
+    "search.providerempty": "No more results from '{provider}'.",
     "search.processerror": "Could not process pictures from provider '{provider}'.",
     "search.httperror": "Communication failed with provider '{provider}'.",
     "search.tags": "Search tags",
@@ -23,6 +23,7 @@ const en = {
 
     "nav.onlineproviders": "Browse online",
     "nav.favorites": "Browse favorites",
+    "nav.workspaces": "Browse workspaces",
     "nav.settings": "Settings",
     "nav.nav": "Navigation",
 
@@ -46,6 +47,10 @@ const en = {
     "settings.validationerror": "Some settings are incorrect. Check displayed errors.",
     "settings.general": "General",
     "settings.endlessscrolling": "Use endless scrolling instead of pagination",
+    "settings.processnonexistingmetadata": "Create metadata for pictures not downloaded by Tsuki-tag (makes Tsuki-tag unresponsive and takes a lot of time and memory. Process is one-time only per picture.)",
+
+    "worker.processed": "Processed {0}",
+    "worker.processing": "Processing...",
 
     "safebooru": "Safebooru",
     "konachan": "Konachan",
@@ -75,6 +80,7 @@ const en = {
     "op.favoriteerror": "Could not favorite/unfavorite picture.",
     "op.nodefaultworkspace": "No default workspace has been configured yet.",
     "op.picturesaved": "Saved to workspace '{0}' as '{1}'",
+    "op.tagnotapplied": "Tag change not automatically saved since the picture is not a JPG.",
     "op.picturesaveerror": "Could not save picture. Check writing rights and access to workspace '{0}'.",
 
     "picture.rating": "Rating",

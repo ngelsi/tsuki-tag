@@ -38,6 +38,14 @@
                 ></v-switch>
               </v-col>
             </v-row>
+            <v-row>
+              <v-col cols="12" class="pt-0 pr-5 pl-5 pb-0">
+                <v-switch
+                  v-model="settings.processNonexistingMetadata"
+                  :label="tt('settings.processnonexistingmetadata')"
+                ></v-switch>
+              </v-col>
+            </v-row>
           </v-tab-item>
           <v-tab-item
             :transition="false"

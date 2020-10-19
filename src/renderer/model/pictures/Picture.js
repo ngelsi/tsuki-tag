@@ -126,7 +126,7 @@ export default class Picture {
          * @protected
          * @type {String}
          */
-        this._tags = null;
+        this._tags = "";
 
         /**
          * @member
@@ -163,7 +163,11 @@ export default class Picture {
      * @type {Array<String>}
      */
     get tags() {
-        return this._tags.trim().split(' ');
+        if (this._tags && this._tags.trim()) {
+            return this._tags.trim().split(' ');
+        }
+
+        return [];
     }
 
     /**
@@ -222,7 +226,10 @@ export default class Picture {
      * @type {String}
      */
     get tagString() {
-        return this._tags.trim().split(' ').concat(this._userTags.trim().split(' ')).join(' ');
+        if (this._tags) {
+            return this._tags.trim().split(' ').concat(this._userTags.trim().split(' ')).join(' ');
+        }
+        return '';
     }
 
     /**
@@ -342,7 +349,7 @@ export default class Picture {
 
         if (!this._extension) {
             const index = this._downloadUrl.lastIndexOf('.');
-            this._extension = this._downloadUrl.substr(index + 1, this._downloadUrl.length - index);
+            this._extension = this._downloadUrl.substr(index + 1, this._downloadUrl.length - index).toLowerCase();
         }
 
         return this._extension;
@@ -354,7 +361,16 @@ export default class Picture {
      * @type {String}
      */
     get isMedia() {
-        return this.extension === 'mp4' || this.extension === 'webm' || this.extension === 'gif';
+        return this.extension === 'mp4' || this.extension === 'webm' || this.extension === 'gif' || this.extension === 'mov';
+    }
+
+    /**
+     * @property
+     * @public
+     * @type {String}
+     */
+    get isJpg() {
+        return this.extension.toLowerCase() === 'jpg' || this.extension.toLowerCase() === 'jpeg';
     }
 
     /**
@@ -397,12 +413,22 @@ export default class Picture {
      */
     addTag(target, tag) {
         if (target === 'user') {
+
+            if (!this._userTags) {
+                this._userTags = '';
+            }
+
             const newArray = this._userTags.trim().split(' ');
             newArray.push(tag);
 
             this._userTags = newArray.join(' ');
         }
         else {
+
+            if (!this._tags) {
+                this._tags = '';
+            }
+
             const newArray = this._tags.trim().split(' ');
             newArray.push(tag);
 

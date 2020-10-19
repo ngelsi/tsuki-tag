@@ -6,14 +6,21 @@ import {
     remote
 } from 'electron';
 import AppSettingsMigration2Pagination from '../model/migrations/AppSettingsMigration2Pagination';
+import AppSettingsMigration3WorkspaceProviders from '../model/migrations/AppSettingsMigration3WorkspaceProviders';
+import AppSettingsMigration4MetadataProcessing from '../model/migrations/AppSettingsMigration4MetadataProcessing';
 
 let DataCache = {};
 let Defaults = {};
 let Migrations = {
     'appsettings': [
-        new AppSettingsMigration2Pagination()
+        new AppSettingsMigration2Pagination(),
+        new AppSettingsMigration3WorkspaceProviders(),
+        new AppSettingsMigration4MetadataProcessing()
     ],
     'favorites': [
+
+    ],
+    'workspacepictures': [
 
     ]
 };
@@ -70,6 +77,33 @@ export default class DataStore {
                 data.version = migration.version;
             }
         });
+    }
+
+    /**
+     * @public
+     * @param {String} key 
+     * @returns {Object}
+     */
+    getSync(key) {
+        if (DataCache[key]) {
+            return DataCache[key];
+        }
+        else {
+            const fileContent = fs.readFileSync(this.getPath(key));
+            if (!fileContent) {
+                if (Defaults[key]) {
+                    return Defaults[key];
+                } else {
+                    return null;
+                }
+            } else {
+                const obj = JSON.parse(fileContent);
+                this.checkMigration(key, obj);
+
+                DataCache[key] = obj;
+                return obj;
+            }
+        }
     }
 
     /**

@@ -229,6 +229,19 @@ export default {
       } else if (event.action === "add") {
         this.picture.addTag("tag", event.tag);
       }
+
+      if (this.picture.workspace && this.picture.path) {
+        if (!this.picture.isJpg) {
+          this.$refs.toaster.info(t("op.tagnotapplied"));
+        } else {
+          const workspaces = this.settings.workspaces.filter(
+            (w) => w.name === this.picture.workspace
+          );
+          if (workspaces && workspaces.length) {
+            this.savePicture(workspaces[0]);
+          }
+        }
+      }
     },
 
     /** @param {Picture} picture */
@@ -301,10 +314,6 @@ export default {
       worker
         .favorite(this.picture)
         .then(() => {
-          // this.$refs.toaster.info(
-          //   this.picture.favorite ? t("op.favorited") : t("op.unfavorited")
-          // );
-
           this.$emit("favoriteChanged");
         })
         .catch((err) => {
@@ -353,10 +362,7 @@ export default {
         .then((buffer) => {
           this.sourceImageBuffer = buffer;
 
-          const isjpg =
-            this.picture.extension.toLowerCase() === "jpg" ||
-            this.picture.extension.toLowerCase() === "jpeg";
-
+          const isjpg = this.picture.isjpg;
           const dontconvert = !workspace.convertToJpg || isjpg;
           const processMetadata = isjpg || workspace.convertToJpg;
 
@@ -394,17 +400,29 @@ export default {
                   worker
                     .savePicture(picturePath, buffer)
                     .then(() => {
-                      this.$refs.toaster.info(
-                        StringUtils.cformat(
-                          t("op.picturesaved"),
-                          workspace.name,
-                          pictureName
+                      worker
+                        .AddToWorkspacePictures(
+                          this.picture,
+                          workspace,
+                          picturePath
                         )
-                      );
+                        .then(() => {
+                          this.$refs.toaster.info(
+                            StringUtils.cformat(
+                              t("op.picturesaved"),
+                              workspace.name,
+                              pictureName
+                            )
+                          );
 
-                      this.imagePath = picturePath;
-                      this.working = false;
-                      this.saving = false;
+                          this.imagePath = picturePath;
+                          this.working = false;
+                          this.saving = false;
+                        })
+                        .catch((err) => {
+                          console.log("ERR", err);
+                          error();
+                        });
                     })
                     .catch((err) => {
                       console.log("ERR", err);
