@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-list dense class="picture-metadatas" v-bind:style="{'top': getOffset()}">
+    <v-list dense class="picture-metadatas" v-bind:style="{ top: getOffset() }">
       <v-subheader>
-        <span>{{tt("picture.metadatas")}}</span>
+        <span>{{ tt("picture.metadatas") }}</span>
       </v-subheader>
-      <div class="metadata-wrapper" v-bind:style="{'height': getHeight()}">
+      <div class="metadata-wrapper" v-bind:style="{ height: getHeight() }">
         <v-list-item
           v-for="metadata in metadatas"
           :key="metadata.name"
@@ -12,16 +12,20 @@
         >
           <v-list-item-content class="metadata-content pa-0">
             <div>
-              <span class="purple--text text-decoration-none">{{tt('picture.' + metadata)}}:</span>
+              <span class="purple--text text-decoration-none"
+                >{{ tt("picture." + metadata) }}:</span
+              >
               <span
                 class="text-decoration-none"
                 v-if="!isUrl(picture[metadata])"
-              >{{prettifyMetadata(metadata, picture[metadata])}}</span>
+                >{{ prettifyMetadata(metadata, picture[metadata]) }}</span
+              >
               <span class="text-decoration-none" v-else>
                 <a
                   class="purple--text text-decoration-none"
                   @click="urlClicked(picture[metadata])"
-                >{{tt("misc.copy")}}</a>
+                  >{{ tt("misc.copy") }}</a
+                >
               </span>
             </div>
           </v-list-item-content>
@@ -73,7 +77,7 @@ export default {
       return this.tt(value);
     },
     isUrl(value) {
-      return value.toString().startsWith("http");
+      return value ? value.toString().startsWith("http") : false;
     },
     urlClicked(url) {
       const clipboard = remote.clipboard;
