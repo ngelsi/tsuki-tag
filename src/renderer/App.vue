@@ -4,7 +4,7 @@
     <div class="app-container">
       <v-app>
         <v-system-bar app class="op-bar">
-          <span>Tsuki-tag</span>
+          <span>{{ title }}</span>
           <v-spacer></v-spacer>
           <v-icon @click="minimize" class="op-icon">mdi-minus</v-icon>
           <v-icon @click="maximize" class="op-icon"
@@ -23,12 +23,14 @@
 </template>
 
 <script>
+import { titleService } from "./services/TitleService";
 const remote = require("electron").remote;
 
 export default {
   name: "tsuki-tag",
   data: () => ({
     w: remote.getCurrentWindow(),
+    title: titleService.title,
   }),
   methods: {
     close() {
@@ -40,6 +42,12 @@ export default {
     maximize() {
       this.w.maximize();
     },
+  },
+  created() {
+    titleService.addHandler((title) => {
+      console.log("TITLE", title);
+      this.title = title;
+    });
   },
 };
 </script>
@@ -71,6 +79,7 @@ html {
   -webkit-app-region: no-drag;
 }
 
+.v-btn__content,
 .v-btn__content i {
   user-select: all !important;
 }
