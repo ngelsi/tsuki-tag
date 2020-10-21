@@ -52,7 +52,7 @@
     <PictureModal
       ref="pictureModal"
       v-on:tagSelected="tagSelected"
-      v-on:favoriteChanged="favoriteChanged"
+      v-on:change="modalChanged"
     ></PictureModal>
   </v-card>
 </template>
@@ -196,8 +196,11 @@ export default {
       }
     },
 
-    favoriteChanged() {
-      if (this.providerService.name === "favorites") {
+    modalChanged() {
+      if (
+        this.providerService.name === "favorites" ||
+        this.providerService.name === "workspaces"
+      ) {
         this.providerCache = [];
         this.pictures = [];
         this.getPictures();

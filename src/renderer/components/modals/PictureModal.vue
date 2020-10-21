@@ -13,6 +13,22 @@
         </v-btn>
         <v-spacer></v-spacer>
         <v-toolbar-items>
+          <v-tooltip bottom v-if="picture && picture.path && picture.workspace">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                :disabled="working"
+                @click="deletePicture()"
+                dark
+                v-bind="attrs"
+                v-on="on"
+                icon
+              >
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ tt("op.delete") }}</span>
+          </v-tooltip>
+
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -308,13 +324,25 @@ export default {
         this.imageData = worker.convertToSrc(picture.extension, buffer);
       });
     },
-
+    deletePicture() {
+      const worker = new PictureWorker();
+      worker
+        .delete(this.picture)
+        .then(() => {
+          this.$emit("change");
+          this.close();
+        })
+        .catch((err) => {
+          console.log("ERR", err);
+          this.$refs.toaster.info(t("op.deleteerror"));
+        });
+    },
     favoritePicture() {
       const worker = new PictureWorker();
       worker
         .favorite(this.picture)
         .then(() => {
-          this.$emit("favoriteChanged");
+          this.$emit("change");
         })
         .catch((err) => {
           console.log("ERR", err);

@@ -73,6 +73,8 @@ const en = {
 
     "op.savedefault": "Save to default workspace",
     "op.saveselect": "Save to workspace...",
+    "op.delete": "Delete picture",
+    "op.deleteerror": "Could not delete picture. Check writing rights to the workspace.",
     "op.favorite": "Favorite",
     "op.unfavorite": "Unfavorite",
     "op.favorited": "Added to favorites",

@@ -377,6 +377,36 @@ export default class PictureWorker {
     }
 
     /**
+     * @param {Picture} picture
+     * @returns {Promise}
+     */
+    delete(picture) {
+        return new Promise((resolve, reject) => {
+            if (picture.path && picture.workspace) {
+                fs.unlink(picture.path, (err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        if (picture.favorite) {
+                            this.favorite(picture)
+                                .then(() => {
+                                    resolve();
+                                })
+                                .catch((err) => {
+                                    reject(err);
+                                });
+                        } else {
+                            resolve();
+                        }
+                    }
+                })
+            } else {
+                reject('no path exists for picture');
+            }
+        });
+    }
+
+    /**
      * @param {Picture} picture 
      * @returns {Promise}
      */
