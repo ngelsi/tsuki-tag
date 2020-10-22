@@ -1,6 +1,6 @@
 {
   "name": "tsuki-tag",
-  "version": "0.8.7",
+  "version": "0.9.0",
   "author": "Norbert Gelsi <norbert.gelsi@gmail.com>",
   "description": "Anime imageboard browser, aggregator, downloader, tagger, converter. Built using Electron.",
   "license": "GNU GPL 3",

@@ -18,6 +18,8 @@ Aggregated Imageboard browser built using Electron which lets you browse multipl
 - Inject EXIF metadata such as the tags assigned to the picture, along with other image attributes, directly into JPG images during downloading.
 - Add, edit, or remove image tags before saving the image.
 - Filename templating support.
+- Browse configured workspaces the same way as you would browse online providers.
+- Process already existing pictures in workspaces (experimental).
 
 # Current List of image providers
 
@@ -28,20 +30,19 @@ Aggregated Imageboard browser built using Electron which lets you browse multipl
 
 # Workspaces
 
-Thuki-tag allows you to manage multiple download folders, 'workspaces', and manage a set of settings per workspace. A default workspace can be selected which will be the default download option offered.
+Thuki-tag allows you to manage multiple download folders, 'workspaces', and manage a set of settings per workspace. A default workspace can be selected which will be the default download option offered. Workspaces can be browsed the same was as online providers. By default, only those pictures will be shown during workspace browsing which were downloaded by Tsuki-tag. There is an experimental feature to process images which were in the workspace but not downloaded by Tsuki-tag to create an initial set of metadata for them. However this is very resource intensive and should be used by caution.
 
 ![Tsuki-tag workspaces](/docs/images/tsuki-tag-workspaces.png)
 
 # Image modal
 
-Selecting an image from the collection opens up a full-sized modal with details of the image, such as tags, attributes, original source, etc. The modal also allows you to save the image to the default, or a specific workspace, along with the option to favorite an image, which will keep a local note of the image location and data. The tags shown in the modal can be freely modified, removed or added to, before downloading the image and injecting the EXIF metadata.
+Selecting an image from the collection opens up a full-sized modal with details of the image, such as tags, attributes, original source, etc. The modal also allows you to save the image to the default, or a specific workspace, along with the option to favorite an image, which will keep a local note of the image location and data. The tags shown in the modal can be freely modified, removed or added to, before downloading the image and injecting the EXIF metadata. If the picture is opened from a workspace, auto-saving tag changes and picture deletion is also an option.
 
 ![Tsuki-tag image modal](/docs/images/tsuki-tag-modal.png)
 
 # Possible future features
 
 - Integrating more image providers.
-- Browsing local workspaces the same way as the online providers.
 - Image selection and mass downloading system.
 - Open multiple selected images in a configurable single screen (reference mode).
 

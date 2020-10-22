@@ -89,19 +89,28 @@ export default class DataStore {
             return DataCache[key];
         }
         else {
-            const fileContent = fs.readFileSync(this.getPath(key));
-            if (!fileContent) {
+            try {
+                const fileContent = fs.readFileSync(this.getPath(key));
+                if (!fileContent) {
+                    if (Defaults[key]) {
+                        return Defaults[key];
+                    } else {
+                        return null;
+                    }
+                } else {
+                    const obj = JSON.parse(fileContent);
+                    this.checkMigration(key, obj);
+
+                    DataCache[key] = obj;
+                    return obj;
+                }
+            }
+            catch(err) {
                 if (Defaults[key]) {
                     return Defaults[key];
                 } else {
                     return null;
                 }
-            } else {
-                const obj = JSON.parse(fileContent);
-                this.checkMigration(key, obj);
-
-                DataCache[key] = obj;
-                return obj;
             }
         }
     }

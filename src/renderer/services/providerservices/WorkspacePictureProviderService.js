@@ -76,7 +76,9 @@ export default class WorkspacePictureProviderService extends PictureProviderServ
      * @protected     
      */
     _initializeProviders() {
+        
         const dataStore = new DataStore();
+        DataStore.defaults[AppSettings.name] = AppSettings.default;
 
         /** @type {AppSettings} */
         const data = dataStore.getSync(AppSettings.name);
